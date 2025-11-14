@@ -10,11 +10,16 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.10.1",
+    "date-fns": "^4.1.0",
+    "i": "^0.3.7",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.553.0",
     "next": "16.0.3",
+    "npm": "^11.6.2",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "sweetalert2": "^11.26.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

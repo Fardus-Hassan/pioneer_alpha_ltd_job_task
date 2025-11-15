@@ -24,6 +24,8 @@ export interface TodoPayload {
   description: string;
   priority: "low" | "moderate" | "extreme";
   todo_date: string;
+  is_completed?: boolean;
+  position?: number;
 }
 
 export const todoApi = apiSlice.injectEndpoints({

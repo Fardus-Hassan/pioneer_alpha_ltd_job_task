@@ -1,9 +1,18 @@
 "use client";
 
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { useEffect } from "react";
+
 
 export default function Home() {
+
+    useEffect(() => {
+      if (localStorage.getItem("access_token")) {
+        window.location.href = "/dashboard";
+      }
+      else {
+        window.location.href = "/login";
+      }
+    }, []);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">

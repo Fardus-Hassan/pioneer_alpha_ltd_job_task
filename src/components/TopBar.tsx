@@ -32,11 +32,11 @@ export default function TopBar() {
 <path d="M89.6094 13.6302V8.22839L86.9825 0H89.5608L91.0107 4.79479L92.3575 0H94.8569L92.2604 8.22839V13.6302H89.6094Z" fill="#0C0C0C"/>
 <defs>
 <linearGradient id="paint0_linear_7_3279" x1="5.87102" y1="33.3463" x2="25.8991" y2="-0.976193" gradientUnits="userSpaceOnUse">
-<stop stop-color="#2E6AFF"/>
-<stop offset="0.2957" stop-color="#5C42FF"/>
-<stop offset="0.6071" stop-color="#5272FF"/>
-<stop offset="0.8527" stop-color="#5272FF"/>
-<stop offset="1" stop-color="#5272FF"/>
+<stop stopColor="#2E6AFF"/>
+<stop offset="0.2957" stopColor="#5C42FF"/>
+<stop offset="0.6071" stopColor="#5272FF"/>
+<stop offset="0.8527" stopColor="#5272FF"/>
+<stop offset="1" stopColor="#5272FF"/>
 </linearGradient>
 </defs>
 </svg>

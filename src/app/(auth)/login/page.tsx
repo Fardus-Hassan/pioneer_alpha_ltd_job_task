@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Swal from "sweetalert2";
+import { isAuthenticated } from "@/utils/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,8 +17,8 @@ export default function LoginPage() {
 
   useEffect(() => {
     // Check if user is already logged in
-    if (localStorage.getItem("access_token")) {
-      window.location.href = "/dashboard";
+    if (isAuthenticated()) {
+      router.push("/");
       return;
     }
 
@@ -30,7 +31,7 @@ export default function LoginPage() {
       setPassword(rememberedPassword);
       setRememberMe(true);
     }
-  }, []);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +59,7 @@ export default function LoginPage() {
         confirmButtonColor: "#3b82f6",
       });
 
-      router.push("/dashboard");
+      router.push("/");
 
     } catch (err) {
       console.log("Login Error:", err);

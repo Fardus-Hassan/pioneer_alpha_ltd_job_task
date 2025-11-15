@@ -5,9 +5,11 @@ import { Home, CheckSquare, User, LogOut, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { logout } from '@/utils/auth';
+import Swal from 'sweetalert2';
 
 const menuItems = [
-  { icon: Home, label: 'Dashboard', href: '/dashboard' },
+  { icon: Home, label: 'Dashboard', href: '/' },
   { icon: CheckSquare, label: 'Todos', href: '/todos' },
   { icon: User, label: 'Account Information', href: '/account' },
 ];
@@ -18,6 +20,23 @@ export default function Sidebar() {
 
   const isActive = (href: string) => pathname === href;
 
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to logout?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, logout',
+      cancelButtonText: 'Cancel',
+    });
+
+    if (result.isConfirmed) {
+      logout();
+    }
+  };
+
   const SidebarContent = () => (
     <div className="flex flex-col h-screen bg-[#0a1a2e] text-white">
       {/* Profile */}
@@ -25,7 +44,7 @@ export default function Sidebar() {
         <div className="flex flex-col items-center">
           <div className="relative w-20 h-20 mb-3">
             <Image
-              src="/profile.webp"
+              src="/profile.jpg"
               alt="Profile"
               fill
               className="rounded-full object-cover border-4 border-gray-700"
@@ -56,7 +75,10 @@ export default function Sidebar() {
 
       {/* Logout */}
       <div className="p-4 border-t border-gray-800">
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors">
+        <button 
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-white rounded-lg transition-colors"
+        >
           <LogOut className="w-5 h-5" />
           <span className="font-medium">Logout</span>
         </button>

@@ -184,7 +184,7 @@ export default function AccountPage() {
                     src={
                       form.profile_image
                         ? URL.createObjectURL(form.profile_image)
-                        : user?.profile_image || "/default-avatar.png"
+                        : user?.profile_image || "/profile.jpg"
                     }
                     alt="profile"
                     className="w-20 h-20 rounded-full object-cover bg-gray-300"

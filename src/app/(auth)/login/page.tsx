@@ -41,7 +41,6 @@ export default function LoginPage() {
       // Store tokens
       localStorage.setItem("access_token", res.access);
       localStorage.setItem("refresh_token", res.refresh);
-      localStorage.setItem("user_email", email);
 
       // Handle remember me
       if (rememberMe) {

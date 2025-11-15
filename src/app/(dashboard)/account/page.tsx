@@ -1,6 +1,9 @@
 "use client";
 
-import { useGetUserQuery, useUpdateUserMutation } from "@/redux/api/profile/profileApi";
+import {
+  useGetUserQuery,
+  useUpdateUserMutation,
+} from "@/redux/api/profile/profileApi";
 import { useChangePasswordMutation } from "@/redux/api/auth/authApi";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
@@ -8,7 +11,8 @@ import Swal from "sweetalert2";
 export default function AccountPage() {
   const { data: user, isLoading } = useGetUserQuery();
   const [updateUser, { isLoading: updating }] = useUpdateUserMutation();
-  const [changePassword, { isLoading: changingPassword }] = useChangePasswordMutation();
+  const [changePassword, { isLoading: changingPassword }] =
+    useChangePasswordMutation();
 
   const [form, setForm] = useState({
     first_name: "",
@@ -25,6 +29,12 @@ export default function AccountPage() {
     old_password: "",
     new_password: "",
     confirm_password: "",
+  });
+
+  const [showPassword, setShowPassword] = useState({
+    old_password: false,
+    new_password: false,
+    confirm_password: false,
   });
 
   // Load user data when fetch completes
@@ -55,7 +65,7 @@ export default function AccountPage() {
     } catch (err: any) {
       await Swal.fire({
         title: "Error!",
-        text: err?.data?.detail || "Something went wrong",
+        text: err?.detail || "Something went wrong",
         icon: "error",
         confirmButtonColor: "#ef4444",
       });
@@ -65,7 +75,7 @@ export default function AccountPage() {
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Frontend validation for confirm password
     if (passwordForm.new_password !== passwordForm.confirm_password) {
       await Swal.fire({
@@ -100,7 +110,7 @@ export default function AccountPage() {
         icon: "success",
         confirmButtonColor: "#3b82f6",
       });
-      
+
       setChangePasswordModal(false);
       setPasswordForm({
         old_password: "",
@@ -110,176 +120,306 @@ export default function AccountPage() {
     } catch (err: any) {
       await Swal.fire({
         title: "Error!",
-        text: err?.data?.detail || "Failed to change password",
+        text: err?.detail || "Failed to change password",
         icon: "error",
         confirmButtonColor: "#ef4444",
       });
     }
   };
 
+  const togglePasswordVisibility = (field: keyof typeof showPassword) => {
+    setShowPassword((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
   if (isLoading) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-[#EEF7FF] py-8 px-4">
+      <div className="max-w-4xl mx-auto lg:bg-white lg:px-[28px] lg:py-[20px] rounded-2xl">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Account Information</h1>
-          <p className="text-gray-600">Manage your account settings and profile information</p>
+        <div className="mb-6">
+          <svg
+            viewBox="0 0 242 32.2222"
+            xmlns="http://www.w3.org/2000/svg"
+            width="242.000000"
+            height="32.222168"
+            fill="none"
+            customFrame="#000000"
+          >
+            <rect
+              id="Frame 262"
+              width="242.000000"
+              height="32.222221"
+              x="0.000000"
+              y="0.000000"
+            />
+            <path
+              id="Account Information"
+              d="M3.96307 23.2273L0.588068 23.2273L6.73295 5.77273L10.6364 5.77273L16.7898 23.2273L13.4148 23.2273L8.75284 9.35227L8.61648 9.35227L3.96307 23.2273ZM4.07386 16.3835L13.2784 16.3835L13.2784 18.9233L4.07386 18.9233L4.07386 16.3835ZM24.2642 23.483C22.9574 23.483 21.8352 23.196 20.8977 22.6222C19.9659 22.0483 19.2472 21.2557 18.7415 20.2443C18.2415 19.2273 17.9915 18.0568 17.9915 16.733C17.9915 15.4034 18.2472 14.2301 18.7585 13.2131C19.2699 12.1903 19.9915 11.3949 20.9233 10.8267C21.8608 10.2528 22.9688 9.96591 24.2472 9.96591C25.3097 9.96591 26.25 10.1619 27.0682 10.554C27.892 10.9403 28.5483 11.4886 29.0369 12.1989C29.5256 12.9034 29.804 13.7273 29.8722 14.6705L26.9233 14.6705C26.804 14.0398 26.5199 13.5142 26.071 13.0937C25.6278 12.6676 25.0341 12.4545 24.2898 12.4545C23.6591 12.4545 23.1051 12.625 22.6278 12.9659C22.1506 13.3011 21.7784 13.7841 21.5114 14.4148C21.25 15.0455 21.1193 15.8011 21.1193 16.6818C21.1193 17.5739 21.25 18.3409 21.5114 18.983C21.7727 19.6193 22.1392 20.1108 22.6108 20.4574C23.0881 20.7983 23.6477 20.9688 24.2898 20.9688C24.7443 20.9688 25.1506 20.8835 25.5085 20.7131C25.8722 20.5369 26.1761 20.2841 26.4205 19.9545C26.6648 19.625 26.8324 19.2244 26.9233 18.7528L29.8722 18.7528C29.7983 19.679 29.5256 20.5 29.054 21.2159C28.5824 21.9261 27.9403 22.483 27.1278 22.8864C26.3153 23.2841 25.3608 23.483 24.2642 23.483ZM38.1158 23.483C36.8089 23.483 35.6868 23.196 34.7493 22.6222C33.8175 22.0483 33.0987 21.2557 32.593 20.2443C32.093 19.2273 31.843 18.0568 31.843 16.733C31.843 15.4034 32.0987 14.2301 32.6101 13.2131C33.1214 12.1903 33.843 11.3949 34.7749 10.8267C35.7124 10.2528 36.8203 9.96591 38.0987 9.96591C39.1612 9.96591 40.1016 10.1619 40.9197 10.554C41.7436 10.9403 42.3999 11.4886 42.8885 12.1989C43.3771 12.9034 43.6555 13.7273 43.7237 14.6705L40.7749 14.6705C40.6555 14.0398 40.3714 13.5142 39.9226 13.0937C39.4794 12.6676 38.8857 12.4545 38.1413 12.4545C37.5107 12.4545 36.9567 12.625 36.4794 12.9659C36.0021 13.3011 35.63 13.7841 35.3629 14.4148C35.1016 15.0455 34.9709 15.8011 34.9709 16.6818C34.9709 17.5739 35.1016 18.3409 35.3629 18.983C35.6243 19.6193 35.9908 20.1108 36.4624 20.4574C36.9396 20.7983 37.4993 20.9688 38.1413 20.9688C38.5959 20.9688 39.0021 20.8835 39.3601 20.7131C39.7237 20.5369 40.0277 20.2841 40.272 19.9545C40.5163 19.625 40.6839 19.2244 40.7749 18.7528L43.7237 18.7528C43.6499 19.679 43.3771 20.5 42.9055 21.2159C42.4339 21.9261 41.7919 22.483 40.9794 22.8864C40.1669 23.2841 39.2124 23.483 38.1158 23.483ZM51.9673 23.483C50.6889 23.483 49.581 23.2017 48.6435 22.6392C47.706 22.0767 46.9787 21.2898 46.4616 20.2784C45.9503 19.267 45.6946 18.0852 45.6946 16.733C45.6946 15.3807 45.9503 14.196 46.4616 13.179C46.9787 12.1619 47.706 11.3722 48.6435 10.8097C49.581 10.2472 50.6889 9.96591 51.9673 9.96591C53.2457 9.96591 54.3537 10.2472 55.2912 10.8097C56.2287 11.3722 56.9531 12.1619 57.4645 13.179C57.9815 14.196 58.2401 15.3807 58.2401 16.733C58.2401 18.0852 57.9815 19.267 57.4645 20.2784C56.9531 21.2898 56.2287 22.0767 55.2912 22.6392C54.3537 23.2017 53.2457 23.483 51.9673 23.483ZM51.9844 21.0114C52.6776 21.0114 53.2571 20.821 53.723 20.4403C54.1889 20.054 54.5355 19.5369 54.7628 18.8892C54.9957 18.2415 55.1122 17.5199 55.1122 16.7244C55.1122 15.9233 54.9957 15.1989 54.7628 14.5511C54.5355 13.8977 54.1889 13.3778 53.723 12.9915C53.2571 12.6051 52.6776 12.4119 51.9844 12.4119C51.2741 12.4119 50.6832 12.6051 50.2116 12.9915C49.7457 13.3778 49.3963 13.8977 49.1634 14.5511C48.9361 15.1989 48.8224 15.9233 48.8224 16.7244C48.8224 17.5199 48.9361 18.2415 49.1634 18.8892C49.3963 19.5369 49.7457 20.054 50.2116 20.4403C50.6832 20.821 51.2741 21.0114 51.9844 21.0114ZM69.2024 17.7216L69.2024 10.1364L72.2876 10.1364L72.2876 23.2273L69.2962 23.2273L69.2962 20.9006L69.1598 20.9006C68.8643 21.6335 68.3786 22.233 67.7024 22.6989C67.032 23.1648 66.2053 23.3977 65.2223 23.3977C64.3643 23.3977 63.6058 23.2074 62.9467 22.8267C62.2933 22.4403 61.782 21.8807 61.4126 21.1477C61.0433 20.4091 60.8587 19.517 60.8587 18.4716L60.8587 10.1364L63.9439 10.1364L63.9439 17.9943C63.9439 18.8239 64.1712 19.483 64.6257 19.9716C65.0803 20.4602 65.6768 20.7045 66.4155 20.7045C66.87 20.7045 67.3104 20.5938 67.7365 20.3722C68.1626 20.1506 68.5121 19.821 68.7848 19.3835C69.0632 18.9403 69.2024 18.3864 69.2024 17.7216ZM78.5455 15.5568L78.5455 23.2273L75.4602 23.2273L75.4602 10.1364L78.4091 10.1364L78.4091 12.3608L78.5625 12.3608C78.8636 11.6278 79.3438 11.0455 80.0028 10.6136C80.6676 10.1818 81.4886 9.96591 82.4659 9.96591C83.3693 9.96591 84.1562 10.1591 84.8267 10.5455C85.5028 10.9318 86.0256 11.4915 86.3949 12.2244C86.7699 12.9574 86.9545 13.8466 86.9489 14.892L86.9489 23.2273L83.8636 23.2273L83.8636 15.3693C83.8636 14.4943 83.6364 13.8097 83.1818 13.3153C82.733 12.821 82.1108 12.5739 81.3153 12.5739C80.7756 12.5739 80.2955 12.6932 79.875 12.9318C79.4602 13.1648 79.1335 13.5028 78.8949 13.946C78.6619 14.3892 78.5455 14.9261 78.5455 15.5568ZM96.6222 10.1364L96.6222 12.5227L89.0966 12.5227L89.0966 10.1364L96.6222 10.1364ZM90.9545 7L94.0398 7L94.0398 19.2898C94.0398 19.7045 94.1023 20.0227 94.2273 20.2443C94.358 20.4602 94.5284 20.608 94.7386 20.6875C94.9489 20.767 95.1818 20.8068 95.4375 20.8068C95.6307 20.8068 95.8068 20.7926 95.9659 20.7642C96.1307 20.7358 96.2557 20.7102 96.3409 20.6875L96.8608 23.0994C96.696 23.1562 96.4602 23.2188 96.1534 23.2869C95.8523 23.3551 95.483 23.3949 95.0455 23.4062C94.2727 23.429 93.5767 23.3125 92.9574 23.0568C92.3381 22.7955 91.8466 22.392 91.483 21.8466C91.125 21.3011 90.9489 20.6193 90.9545 19.8011L90.9545 7ZM108.454 5.77273L108.454 23.2273L105.292 23.2273L105.292 5.77273L108.454 5.77273ZM114.827 15.5568L114.827 23.2273L111.741 23.2273L111.741 10.1364L114.69 10.1364L114.69 12.3608L114.844 12.3608C115.145 11.6278 115.625 11.0455 116.284 10.6136C116.949 10.1818 117.77 9.96591 118.747 9.96591C119.651 9.96591 120.438 10.1591 121.108 10.5455C121.784 10.9318 122.307 11.4915 122.676 12.2244C123.051 12.9574 123.236 13.8466 123.23 14.892L123.23 23.2273L120.145 23.2273L120.145 15.3693C120.145 14.4943 119.918 13.8097 119.463 13.3153C119.014 12.821 118.392 12.5739 117.597 12.5739C117.057 12.5739 116.577 12.6932 116.156 12.9318C115.741 13.1648 115.415 13.5028 115.176 13.946C114.943 14.3892 114.827 14.9261 114.827 15.5568ZM132.997 10.1364L132.997 12.5227L125.259 12.5227L125.259 10.1364L132.997 10.1364ZM127.193 23.2273L127.193 8.90057C127.193 8.01989 127.375 7.28693 127.739 6.7017C128.108 6.11648 128.602 5.67898 129.222 5.3892C129.841 5.09943 130.528 4.95454 131.284 4.95454C131.818 4.95454 132.293 4.99716 132.707 5.08239C133.122 5.16761 133.429 5.24432 133.628 5.3125L133.014 7.69886C132.884 7.65909 132.719 7.61932 132.52 7.57954C132.321 7.53409 132.099 7.51136 131.855 7.51136C131.281 7.51136 130.875 7.65057 130.636 7.92898C130.403 8.2017 130.287 8.59375 130.287 9.10511L130.287 23.2273L127.193 23.2273ZM140.631 23.483C139.353 23.483 138.245 23.2017 137.308 22.6392C136.37 22.0767 135.643 21.2898 135.126 20.2784C134.614 19.267 134.359 18.0852 134.359 16.733C134.359 15.3807 134.614 14.196 135.126 13.179C135.643 12.1619 136.37 11.3722 137.308 10.8097C138.245 10.2472 139.353 9.96591 140.631 9.96591C141.91 9.96591 143.018 10.2472 143.955 10.8097C144.893 11.3722 145.617 12.1619 146.129 13.179C146.646 14.196 146.904 15.3807 146.904 16.733C146.904 18.0852 146.646 19.267 146.129 20.2784C145.617 21.2898 144.893 22.0767 143.955 22.6392C143.018 23.2017 141.91 23.483 140.631 23.483ZM140.648 21.0114C141.342 21.0114 141.921 20.821 142.387 20.4403C142.853 20.054 143.2 19.5369 143.427 18.8892C143.66 18.2415 143.776 17.5199 143.776 16.7244C143.776 15.9233 143.66 15.1989 143.427 14.5511C143.2 13.8977 142.853 13.3778 142.387 12.9915C141.921 12.6051 141.342 12.4119 140.648 12.4119C139.938 12.4119 139.347 12.6051 138.876 12.9915C138.41 13.3778 138.06 13.8977 137.827 14.5511C137.6 15.1989 137.487 15.9233 137.487 16.7244C137.487 17.5199 137.6 18.2415 137.827 18.8892C138.06 19.5369 138.41 20.054 138.876 20.4403C139.347 20.821 139.938 21.0114 140.648 21.0114ZM149.523 23.2273L149.523 10.1364L152.514 10.1364L152.514 12.3182L152.651 12.3182C152.889 11.5625 153.298 10.9801 153.878 10.571C154.463 10.1562 155.131 9.94886 155.881 9.94886C156.051 9.94886 156.241 9.95739 156.452 9.97443C156.668 9.98579 156.847 10.0057 156.989 10.0341L156.989 12.8722C156.858 12.8267 156.651 12.7869 156.366 12.7528C156.088 12.7131 155.818 12.6932 155.557 12.6932C154.994 12.6932 154.489 12.8153 154.04 13.0597C153.597 13.2983 153.247 13.6307 152.991 14.0568C152.736 14.483 152.608 14.9744 152.608 15.5312L152.608 23.2273L149.523 23.2273ZM159.038 23.2273L159.038 10.1364L161.987 10.1364L161.987 12.3608L162.141 12.3608C162.413 11.6108 162.865 11.0256 163.496 10.6051C164.126 10.179 164.879 9.96591 165.754 9.96591C166.641 9.96591 167.388 10.1818 167.996 10.6136C168.609 11.0398 169.041 11.6222 169.291 12.3608L169.428 12.3608C169.717 11.6335 170.206 11.054 170.893 10.6222C171.587 10.1847 172.408 9.96591 173.357 9.96591C174.561 9.96591 175.544 10.3466 176.305 11.108C177.067 11.8693 177.447 12.9801 177.447 14.4403L177.447 23.2273L174.354 23.2273L174.354 14.9176C174.354 14.1051 174.138 13.5114 173.706 13.1364C173.274 12.7557 172.746 12.5653 172.121 12.5653C171.376 12.5653 170.794 12.7983 170.374 13.2642C169.959 13.7244 169.751 14.3239 169.751 15.0625L169.751 23.2273L166.726 23.2273L166.726 14.7898C166.726 14.1136 166.521 13.5739 166.112 13.1705C165.709 12.767 165.18 12.5653 164.527 12.5653C164.084 12.5653 163.68 12.679 163.317 12.9062C162.953 13.1278 162.663 13.4432 162.447 13.8523C162.232 14.2557 162.124 14.7273 162.124 15.267L162.124 23.2273L159.038 23.2273ZM184.344 23.4915C183.515 23.4915 182.768 23.3438 182.103 23.0483C181.444 22.7472 180.921 22.304 180.535 21.7188C180.154 21.1335 179.964 20.4119 179.964 19.554C179.964 18.8153 180.1 18.2045 180.373 17.7216C180.646 17.2386 181.018 16.8523 181.489 16.5625C181.961 16.2727 182.492 16.054 183.083 15.9062C183.68 15.7528 184.296 15.642 184.933 15.5739C185.7 15.4943 186.322 15.4233 186.799 15.3608C187.276 15.2926 187.623 15.1903 187.839 15.054C188.06 14.9119 188.171 14.6932 188.171 14.3977L188.171 14.3466C188.171 13.7045 187.981 13.2074 187.6 12.8551C187.219 12.5028 186.671 12.3267 185.955 12.3267C185.2 12.3267 184.6 12.4915 184.157 12.821C183.719 13.1506 183.424 13.5398 183.271 13.9886L180.39 13.5795C180.617 12.7841 180.992 12.1193 181.515 11.5852C182.038 11.0455 182.677 10.642 183.433 10.375C184.188 10.1023 185.023 9.96591 185.938 9.96591C186.569 9.96591 187.197 10.0398 187.822 10.1875C188.447 10.3352 189.018 10.5795 189.535 10.9205C190.052 11.2557 190.467 11.7131 190.779 12.2926C191.097 12.8722 191.256 13.5966 191.256 14.4659L191.256 23.2273L188.29 23.2273L188.29 21.429L188.188 21.429C188.001 21.7926 187.737 22.1335 187.396 22.4517C187.06 22.7642 186.637 23.017 186.126 23.2102C185.62 23.3977 185.026 23.4915 184.344 23.4915ZM185.146 21.2244C185.765 21.2244 186.302 21.1023 186.756 20.858C187.211 20.608 187.56 20.2784 187.805 19.8693C188.055 19.4602 188.18 19.0142 188.18 18.5312L188.18 16.9886C188.083 17.0682 187.918 17.142 187.685 17.2102C187.458 17.2784 187.202 17.3381 186.918 17.3892C186.634 17.4403 186.353 17.4858 186.075 17.5256C185.796 17.5653 185.555 17.5994 185.35 17.6278C184.89 17.6903 184.478 17.7926 184.114 17.9347C183.751 18.0767 183.464 18.2756 183.254 18.5312C183.043 18.7812 182.938 19.1051 182.938 19.5028C182.938 20.071 183.146 20.5 183.56 20.7898C183.975 21.0795 184.504 21.2244 185.146 21.2244ZM200.896 10.1364L200.896 12.5227L193.37 12.5227L193.37 10.1364L200.896 10.1364ZM195.228 7L198.313 7L198.313 19.2898C198.313 19.7045 198.376 20.0227 198.501 20.2443C198.631 20.4602 198.802 20.608 199.012 20.6875C199.222 20.767 199.455 20.8068 199.711 20.8068C199.904 20.8068 200.08 20.7926 200.239 20.7642C200.404 20.7358 200.529 20.7102 200.614 20.6875L201.134 23.0994C200.969 23.1562 200.734 23.2188 200.427 23.2869C200.126 23.3551 199.756 23.3949 199.319 23.4062C198.546 23.429 197.85 23.3125 197.231 23.0568C196.612 22.7955 196.12 22.392 195.756 21.8466C195.398 21.3011 195.222 20.6193 195.228 19.8011L195.228 7ZM203.476 23.2273L203.476 10.1364L206.561 10.1364L206.561 23.2273L203.476 23.2273ZM205.027 8.27841C204.538 8.27841 204.118 8.11648 203.766 7.79261C203.413 7.46307 203.237 7.06818 203.237 6.60795C203.237 6.14204 203.413 5.74716 203.766 5.42329C204.118 5.09375 204.538 4.92898 205.027 4.92898C205.521 4.92898 205.942 5.09375 206.288 5.42329C206.641 5.74716 206.817 6.14204 206.817 6.60795C206.817 7.06818 206.641 7.46307 206.288 7.79261C205.942 8.11648 205.521 8.27841 205.027 8.27841ZM215.444 23.483C214.165 23.483 213.058 23.2017 212.12 22.6392C211.183 22.0767 210.455 21.2898 209.938 20.2784C209.427 19.267 209.171 18.0852 209.171 16.733C209.171 15.3807 209.427 14.196 209.938 13.179C210.455 12.1619 211.183 11.3722 212.12 10.8097C213.058 10.2472 214.165 9.96591 215.444 9.96591C216.722 9.96591 217.83 10.2472 218.768 10.8097C219.705 11.3722 220.43 12.1619 220.941 13.179C221.458 14.196 221.717 15.3807 221.717 16.733C221.717 18.0852 221.458 19.267 220.941 20.2784C220.43 21.2898 219.705 22.0767 218.768 22.6392C217.83 23.2017 216.722 23.483 215.444 23.483ZM215.461 21.0114C216.154 21.0114 216.734 20.821 217.2 20.4403C217.665 20.054 218.012 19.5369 218.239 18.8892C218.472 18.2415 218.589 17.5199 218.589 16.7244C218.589 15.9233 218.472 15.1989 218.239 14.5511C218.012 13.8977 217.665 13.3778 217.2 12.9915C216.734 12.6051 216.154 12.4119 215.461 12.4119C214.751 12.4119 214.16 12.6051 213.688 12.9915C213.222 13.3778 212.873 13.8977 212.64 14.5511C212.413 15.1989 212.299 15.9233 212.299 16.7244C212.299 17.5199 212.413 18.2415 212.64 18.8892C212.873 19.5369 213.222 20.054 213.688 20.4403C214.16 20.821 214.751 21.0114 215.461 21.0114ZM227.42 15.5568L227.42 23.2273L224.335 23.2273L224.335 10.1364L227.284 10.1364L227.284 12.3608L227.438 12.3608C227.739 11.6278 228.219 11.0455 228.878 10.6136C229.543 10.1818 230.364 9.96591 231.341 9.96591C232.244 9.96591 233.031 10.1591 233.702 10.5455C234.378 10.9318 234.901 11.4915 235.27 12.2244C235.645 12.9574 235.83 13.8466 235.824 14.892L235.824 23.2273L232.739 23.2273L232.739 15.3693C232.739 14.4943 232.511 13.8097 232.057 13.3153C231.608 12.821 230.986 12.5739 230.19 12.5739C229.651 12.5739 229.17 12.6932 228.75 12.9318C228.335 13.1648 228.009 13.5028 227.77 13.946C227.537 14.3892 227.42 14.9261 227.42 15.5568Z"
+              fill="rgb(12.7057,33.8758,74.375)"
+              fill-rule="nonzero"
+            />
+            <line
+              id="Line 6"
+              x1="3"
+              x2="164"
+              y1="31"
+              y2="31"
+              stroke="rgb(82.1394,114.151,255)"
+              stroke-width="2"
+            />
+          </svg>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <form onSubmit={handleSubmit} className="p-8">
-            {/* Profile Image Section */}
-            <div className="flex flex-col items-center mb-8">
-              <div className="relative mb-4">
-                <img
-                  src={
-                    form.profile_image
-                      ? URL.createObjectURL(form.profile_image)
-                      : user?.profile_image || "/default-avatar.png"
-                  }
-                  alt="profile"
-                  className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
-                />
-                <label className="absolute bottom-2 right-2 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-colors duration-200">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        profile_image: e.target.files?.[0] || null,
-                      })
+        <div className="">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Profile Image Section with Change Password Button */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4 border px-[24px] py-[14px] rounded-2xl border-[#A1A3ABA1]">
+                <div className="relative">
+                  <img
+                    src={
+                      form.profile_image
+                        ? URL.createObjectURL(form.profile_image)
+                        : user?.profile_image || "/default-avatar.png"
                     }
+                    alt="profile"
+                    className="w-20 h-20 rounded-full object-cover bg-gray-300"
                   />
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-1.5 rounded-full cursor-pointer hover:bg-blue-700 transition-colors duration-200">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          profile_image: e.target.files?.[0] || null,
+                        })
+                      }
+                    />
+                    <svg
+                      viewBox="0 0 16 16"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16.000000"
+                      height="16.000000"
+                      fill="none"
+                    >
+                      <rect
+                        id="Frame"
+                        width="16.000000"
+                        height="16.000000"
+                        x="0.000000"
+                        y="0.000000"
+                        fill="rgb(0,0,0)"
+                        fill-opacity="0"
+                      />
+                      <rect
+                        id="Frame"
+                        width="16.000000"
+                        height="16.000000"
+                        x="0.000000"
+                        y="0.000000"
+                        stroke="rgb(229,231,235)"
+                        stroke-width="0"
+                      />
+                      <path
+                        id="Vector"
+                        d="M4.65938 2.025L4.33437 3L2 3C0.896875 3 0 3.89687 0 5L0 13C0 14.1031 0.896875 15 2 15L14 15C15.1031 15 16 14.1031 16 13L16 5C16 3.89687 15.1031 3 14 3L11.6656 3L11.3406 2.025C11.1375 1.4125 10.5656 1 9.91875 1L6.08125 1C5.43438 1 4.8625 1.4125 4.65938 2.025ZM8 6C8.79565 6 9.55871 6.31607 10.1213 6.87868C10.6839 7.44129 11 8.20435 11 9C11 9.79565 10.6839 10.5587 10.1213 11.1213C9.55871 11.6839 8.79565 12 8 12C7.20435 12 6.44129 11.6839 5.87868 11.1213C5.31607 10.5587 5 9.79565 5 9C5 8.20435 5.31607 7.44129 5.87868 6.87868C6.44129 6.31607 7.20435 6 8 6Z"
+                        fill="rgb(255,255,255)"
+                        fill-rule="nonzero"
+                      />
+                    </svg>
+                  </label>
+                </div>
+                <button
+                  type="button"
+                  className="px-6 py-2.5 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg font-medium transition-all duration-200 flex items-center gap-2"
+                  onClick={() =>
+                    (
+                      document.querySelector(
+                        'input[type="file"]'
+                      ) as HTMLInputElement
+                    )?.click()
+                  }
+                >
+                  <svg
+                    viewBox="0 0 16 16"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16.000000"
+                    height="16.000000"
+                    fill="none"
+                  >
+                    <rect
+                      id="Frame"
+                      width="16.000000"
+                      height="16.000000"
+                      x="0.000000"
+                      y="0.000000"
+                      fill="rgb(0,0,0)"
+                      fill-opacity="0"
+                    />
+                    <rect
+                      id="Frame"
+                      width="16.000000"
+                      height="16.000000"
+                      x="0.000000"
+                      y="0.000000"
+                      stroke="rgb(229,231,235)"
+                      stroke-width="0"
+                    />
+                    <path
+                      id="Vector"
+                      d="M9 3.41582L9 11.0002C9 11.5533 8.55313 12.0002 8 12.0002C7.44688 12.0002 7 11.5533 7 11.0002L7 3.41582L4.70625 5.70957C4.31563 6.1002 3.68125 6.1002 3.29063 5.70957C2.9 5.31895 2.9 4.68457 3.29063 4.29395L7.29063 0.293945C7.68125 -0.0966797 8.31563 -0.0966797 8.70625 0.293945L12.7063 4.29395C13.0969 4.68457 13.0969 5.31895 12.7063 5.70957C12.3156 6.1002 11.6812 6.1002 11.2906 5.70957L9 3.41582ZM2 11.0002L6 11.0002C6 12.1033 6.89687 13.0002 8 13.0002C9.10312 13.0002 10 12.1033 10 11.0002L14 11.0002C15.1031 11.0002 16 11.8971 16 13.0002L16 14.0002C16 15.1033 15.1031 16.0002 14 16.0002L2 16.0002C0.896875 16.0002 0 15.1033 0 14.0002L0 13.0002C0 11.8971 0.896875 11.0002 2 11.0002ZM13.5 14.2502C13.6989 14.2502 13.8897 14.1712 14.0303 14.0305C14.171 13.8899 14.25 13.6991 14.25 13.5002C14.25 13.3013 14.171 13.1105 14.0303 12.9699C13.8897 12.8292 13.6989 12.7502 13.5 12.7502C13.3011 12.7502 13.1103 12.8292 12.9697 12.9699C12.829 13.1105 12.75 13.3013 12.75 13.5002C12.75 13.6991 12.829 13.8899 12.9697 14.0305C13.1103 14.1712 13.3011 14.2502 13.5 14.2502Z"
+                      fill="rgb(255,255,255)"
+                      fill-rule="nonzero"
+                    />
                   </svg>
-                </label>
-              </div>
-              <span className="text-sm text-gray-600">Upload New Photo</span>
-            </div>
-
-            {/* Name Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  First Name
-                </label>
-                <input
-                  className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  value={form.first_name}
-                  onChange={(e) => setForm({ ...form, first_name: e.target.value })}
-                  placeholder="Enter your first name"
-                />
+                  Upload New Photo
+                </button>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Last Name
-                </label>
-                <input
-                  className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  value={form.last_name}
-                  onChange={(e) => setForm({ ...form, last_name: e.target.value })}
-                  placeholder="Enter your last name"
-                />
-              </div>
-            </div>
-
-            {/* Email - Read Only */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
-              <input
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed"
-                value={user?.email || ""}
-                disabled
-                readOnly
-              />
-              <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
-            </div>
-
-            {/* Address and Contact Number Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Address
-                </label>
-                <input
-                  className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  value={form.address}
-                  onChange={(e) => setForm({ ...form, address: e.target.value })}
-                  placeholder="Enter your address"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Contact Number
-                </label>
-                <input
-                  className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  value={form.contact_number}
-                  onChange={(e) => setForm({ ...form, contact_number: e.target.value })}
-                  placeholder="Enter your contact number"
-                />
-              </div>
-            </div>
-
-            {/* Birthday */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Birthday
-              </label>
-              <input
-                type="date"
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                value={form.birthday || ""}
-                onChange={(e) => setForm({ ...form, birthday: e.target.value })}
-              />
-            </div>
-
-            {/* Bio */}
-            <div className="mb-8">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Bio
-              </label>
-              <textarea
-                className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
-                value={form.bio || ""}
-                onChange={(e) => setForm({ ...form, bio: e.target.value })}
-                rows={4}
-                placeholder="Tell us about yourself..."
-              />
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-end">
               <button
                 type="button"
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium"
+                className="px-6 py-2.5 cursor-pointer border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium whitespace-nowrap"
                 onClick={() => setChangePasswordModal(true)}
               >
                 Change Password
               </button>
-              <div className="flex gap-4">
-                <button
-                  type="button"
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium"
-                >
-                  Cancel
-                </button>
+            </div>
+
+            {/* Name Row */}
+            <div className="space-y-6 border md:px-[48px] px-[24px] py-[20px] rounded-2xl border-[#A1A3ABA1]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    First Name
+                  </label>
+                  <input
+                    className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    value={form.first_name}
+                    onChange={(e) =>
+                      setForm({ ...form, first_name: e.target.value })
+                    }
+                    placeholder=""
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    Last Name
+                  </label>
+                  <input
+                    className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    value={form.last_name}
+                    onChange={(e) =>
+                      setForm({ ...form, last_name: e.target.value })
+                    }
+                    placeholder=""
+                  />
+                </div>
+              </div>
+
+              {/* Email - Read Only */}
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  Email
+                </label>
+                <input
+                  className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 text-sm bg-gray-50 text-gray-600 cursor-not-allowed"
+                  value={user?.email || ""}
+                  disabled
+                  readOnly
+                />
+              </div>
+
+              {/* Address and Contact Number Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    Address
+                  </label>
+                  <input
+                    className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    value={form.address}
+                    onChange={(e) =>
+                      setForm({ ...form, address: e.target.value })
+                    }
+                    placeholder=""
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    Contact Number
+                  </label>
+                  <input
+                    className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    value={form.contact_number}
+                    onChange={(e) =>
+                      setForm({ ...form, contact_number: e.target.value })
+                    }
+                    placeholder=""
+                  />
+                </div>
+              </div>
+
+              {/* Birthday */}
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  Birthday
+                </label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    value={form.birthday || ""}
+                    onChange={(e) =>
+                      setForm({ ...form, birthday: e.target.value })
+                    }
+                  />
+                  <svg
+                    viewBox="0 0 16 16"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+                    width="16.000000"
+                    height="16.000000"
+                    fill="none"
+                  >
+                    <rect
+                      id="Frame 261"
+                      width="16.000000"
+                      height="16.000000"
+                      x="0.000000"
+                      y="0.000000"
+                    />
+                    <path
+                      id="Combined-Shape"
+                      d="M11.3177 0C11.6574 0 11.9331 0.250045 11.9331 0.558137L11.9335 1.18906C13.1315 1.26356 14.1265 1.63575 14.8307 2.27578C15.5995 2.97606 16.004 3.98294 16 5.19075L16 11.9799C16 14.4595 14.2637 16 11.4699 16L4.53003 16C1.7362 16 0 14.438 0 11.9234L0 5.18926C0 2.85044 1.54835 1.34916 4.07357 1.18932L4.07408 0.558137C4.07408 0.250045 4.34977 0 4.68946 0C5.02915 0 5.30484 0.250045 5.30484 0.558137L5.30459 1.17506L10.7019 1.17506L10.7023 0.558137C10.7023 0.250045 10.978 0 11.3177 0ZM14.7692 6.6262L1.23076 6.6262L1.23076 11.9234C1.23076 13.8329 2.40245 14.8837 4.53003 14.8837L11.4699 14.8837C13.5975 14.8837 14.7692 13.8523 14.7692 11.9799L14.7692 6.6262ZM11.6522 11.3088C11.9919 11.3088 12.2676 11.5589 12.2676 11.867C12.2676 12.175 11.9919 12.4251 11.6522 12.4251C11.3125 12.4251 11.0336 12.175 11.0336 11.867C11.0336 11.5589 11.3051 11.3088 11.6448 11.3088L11.6522 11.3088ZM8.01121 11.3088C8.3509 11.3088 8.62659 11.5589 8.62659 11.867C8.62659 12.175 8.3509 12.4251 8.01121 12.4251C7.67152 12.4251 7.39255 12.175 7.39255 11.867C7.39255 11.5589 7.66413 11.3088 8.00383 11.3088L8.01121 11.3088ZM4.36257 11.3088C4.70226 11.3088 4.97795 11.5589 4.97795 11.867C4.97795 12.175 4.70226 12.4251 4.36257 12.4251C4.02288 12.4251 3.74308 12.175 3.74308 11.867C3.74308 11.5589 4.01549 11.3088 4.35518 11.3088L4.36257 11.3088ZM11.6522 8.41641C11.9919 8.41641 12.2676 8.66645 12.2676 8.97454C12.2676 9.28264 11.9919 9.53268 11.6522 9.53268C11.3125 9.53268 11.0336 9.28264 11.0336 8.97454C11.0336 8.66645 11.3051 8.41641 11.6448 8.41641L11.6522 8.41641ZM8.01121 8.41641C8.3509 8.41641 8.62659 8.66645 8.62659 8.97454C8.62659 9.28264 8.3509 9.53268 8.01121 9.53268C7.67152 9.53268 7.39255 9.28264 7.39255 8.97454C7.39255 8.66645 7.66413 8.41641 8.00383 8.41641L8.01121 8.41641ZM4.36257 8.41641C4.70226 8.41641 4.97795 8.66645 4.97795 8.97454C4.97795 9.28264 4.70226 9.53268 4.36257 9.53268C4.02288 9.53268 3.74308 9.28264 3.74308 8.97454C3.74308 8.66645 4.01549 8.41641 4.35518 8.41641L4.36257 8.41641ZM10.7019 2.29134L5.30459 2.29134L5.30484 3.00724C5.30484 3.31533 5.02915 3.56538 4.68946 3.56538C4.34977 3.56538 4.07408 3.31533 4.07408 3.00724L4.07364 2.30823C2.23551 2.44828 1.23076 3.45885 1.23076 5.18926L1.23076 5.50993L14.7692 5.50993L14.7692 5.18926C14.7725 4.27019 14.5 3.55578 13.9593 3.06462C13.4847 2.63285 12.7908 2.37498 11.9338 2.30859L11.9331 3.00724C11.9331 3.31533 11.6574 3.56538 11.3177 3.56538C10.978 3.56538 10.7023 3.31533 10.7023 3.00724L10.7019 2.29134Z"
+                      fill="rgb(140,163,205)"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-12 py-2.5 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={updating}
                 >
                   {updating ? "Saving..." : "Save Changes"}
+                </button>
+                <button
+                  type="button"
+                  className="px-12 py-2.5 cursor-pointer bg-gray-400 hover:bg-gray-500 text-white text-sm rounded-lg font-medium transition-all duration-200"
+                >
+                  Cancel
                 </button>
               </div>
             </div>
@@ -290,61 +430,204 @@ export default function AccountPage() {
       {/* Change Password Modal */}
       {changePasswordModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div 
-            className="bg-white rounded-2xl w-full max-w-md transform transition-all duration-300 scale-100 animate-slideUp"
+          <div
+            className="bg-white rounded-xl w-full max-w-md transform transition-all duration-300 scale-100 animate-slideUp"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-800">Change Password</h2>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Change Password
+              </h2>
             </div>
-            
+
             <form onSubmit={handleChangePassword} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Current Password *
                 </label>
-                <input
-                  type="password"
-                  placeholder="Enter current password"
-                  value={passwordForm.old_password}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, old_password: e.target.value })}
-                  className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword.old_password ? "text" : "password"}
+                    placeholder="Enter current password"
+                    value={passwordForm.old_password}
+                    onChange={(e) =>
+                      setPasswordForm({
+                        ...passwordForm,
+                        old_password: e.target.value,
+                      })
+                    }
+                    className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 pr-10"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute cursor-pointer inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                    onClick={() => togglePasswordVisibility("old_password")}
+                  >
+                    {showPassword.old_password ? (
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9.11958 9.82668L13.1464 13.8536C13.3417 14.0488 13.6583 14.0488 13.8536 13.8536C14.0488 13.6583 14.0488 13.3417 13.8536 13.1464L0.853553 0.146447C0.658291 -0.0488155 0.341709 -0.0488155 0.146447 0.146446C-0.0488156 0.341709 -0.0488155 0.658291 0.146447 0.853553L3.37624 4.08334C2.90117 4.4183 2.5126 4.80026 2.19877 5.18295C1.75443 5.72477 1.46154 6.26493 1.27931 6.66977C1.18795 6.87274 1.12369 7.04329 1.08166 7.1653C1.06063 7.22636 1.03453 7.31047 1.03453 7.31047L1.01687 7.37186C1.01687 7.37186 0.940979 7.86907 1.37202 7.9833C1.63879 8.05404 1.91251 7.8948 1.98346 7.62815L1.98444 7.62471L1.99179 7.5997C1.9989 7.57616 2.01051 7.53927 2.02715 7.49095C2.06047 7.39421 2.11375 7.25227 2.19119 7.08023C2.34655 6.73507 2.59627 6.27523 2.97201 5.81706C3.26363 5.46146 3.63213 5.10494 4.09595 4.80306L5.67356 6.38067C4.9688 6.82277 4.50024 7.60667 4.50024 8.5C4.50024 9.88071 5.61953 11 7.00024 11C7.89358 11 8.67747 10.5314 9.11958 9.82668ZM8.3807 9.0878C8.15205 9.62408 7.62005 10 7.00024 10C6.17182 10 5.50024 9.32843 5.50024 8.5C5.50024 7.88019 5.87616 7.34819 6.41244 7.11955L8.3807 9.0878ZM5.31962 3.19853L6.174 4.05291C6.43366 4.01852 6.70875 4 7.00017 4C9.0445 4 10.2857 4.9115 11.0283 5.81706C11.4041 6.27523 11.6538 6.73507 11.8091 7.08023C11.8866 7.25227 11.9399 7.39421 11.9732 7.49095C11.9898 7.53927 12.0014 7.57616 12.0085 7.5997L12.0159 7.62471L12.0169 7.62815L12.0172 7.62937C12.0885 7.89555 12.3618 8.05397 12.6283 7.9833C12.8952 7.91253 13.0542 7.63878 12.9835 7.37186L12.9832 7.37069L12.9827 7.36916L12.9816 7.365L12.9781 7.35236C12.9752 7.34204 12.9711 7.328 12.9658 7.31047C12.9552 7.27541 12.9397 7.22636 12.9187 7.1653C12.8766 7.04329 12.8124 6.87274 12.721 6.66977C12.5388 6.26493 12.2459 5.72477 11.8016 5.18295C10.904 4.0885 9.39524 3 7.00017 3C6.38264 3 5.82403 3.07236 5.31962 3.19853Z"
+                          fill="#5272FF"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   New Password *
                 </label>
-                <input
-                  type="password"
-                  placeholder="Enter new password"
-                  value={passwordForm.new_password}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, new_password: e.target.value })}
-                  className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword.new_password ? "text" : "password"}
+                    placeholder="Enter new password"
+                    value={passwordForm.new_password}
+                    onChange={(e) =>
+                      setPasswordForm({
+                        ...passwordForm,
+                        new_password: e.target.value,
+                      })
+                    }
+                    className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 pr-10"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute cursor-pointer inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                    onClick={() => togglePasswordVisibility("new_password")}
+                  >
+                    {showPassword.new_password ? (
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9.11958 9.82668L13.1464 13.8536C13.3417 14.0488 13.6583 14.0488 13.8536 13.8536C14.0488 13.6583 14.0488 13.3417 13.8536 13.1464L0.853553 0.146447C0.658291 -0.0488155 0.341709 -0.0488155 0.146447 0.146446C-0.0488156 0.341709 -0.0488155 0.658291 0.146447 0.853553L3.37624 4.08334C2.90117 4.4183 2.5126 4.80026 2.19877 5.18295C1.75443 5.72477 1.46154 6.26493 1.27931 6.66977C1.18795 6.87274 1.12369 7.04329 1.08166 7.1653C1.06063 7.22636 1.03453 7.31047 1.03453 7.31047L1.01687 7.37186C1.01687 7.37186 0.940979 7.86907 1.37202 7.9833C1.63879 8.05404 1.91251 7.8948 1.98346 7.62815L1.98444 7.62471L1.99179 7.5997C1.9989 7.57616 2.01051 7.53927 2.02715 7.49095C2.06047 7.39421 2.11375 7.25227 2.19119 7.08023C2.34655 6.73507 2.59627 6.27523 2.97201 5.81706C3.26363 5.46146 3.63213 5.10494 4.09595 4.80306L5.67356 6.38067C4.9688 6.82277 4.50024 7.60667 4.50024 8.5C4.50024 9.88071 5.61953 11 7.00024 11C7.89358 11 8.67747 10.5314 9.11958 9.82668ZM8.3807 9.0878C8.15205 9.62408 7.62005 10 7.00024 10C6.17182 10 5.50024 9.32843 5.50024 8.5C5.50024 7.88019 5.87616 7.34819 6.41244 7.11955L8.3807 9.0878ZM5.31962 3.19853L6.174 4.05291C6.43366 4.01852 6.70875 4 7.00017 4C9.0445 4 10.2857 4.9115 11.0283 5.81706C11.4041 6.27523 11.6538 6.73507 11.8091 7.08023C11.8866 7.25227 11.9399 7.39421 11.9732 7.49095C11.9898 7.53927 12.0014 7.57616 12.0085 7.5997L12.0159 7.62471L12.0169 7.62815L12.0172 7.62937C12.0885 7.89555 12.3618 8.05397 12.6283 7.9833C12.8952 7.91253 13.0542 7.63878 12.9835 7.37186L12.9832 7.37069L12.9827 7.36916L12.9816 7.365L12.9781 7.35236C12.9752 7.34204 12.9711 7.328 12.9658 7.31047C12.9552 7.27541 12.9397 7.22636 12.9187 7.1653C12.8766 7.04329 12.8124 6.87274 12.721 6.66977C12.5388 6.26493 12.2459 5.72477 11.8016 5.18295C10.904 4.0885 9.39524 3 7.00017 3C6.38264 3 5.82403 3.07236 5.31962 3.19853Z"
+                          fill="#5272FF"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Confirm New Password *
                 </label>
-                <input
-                  type="password"
-                  placeholder="Confirm new password"
-                  value={passwordForm.confirm_password}
-                  onChange={(e) => setPasswordForm({ ...passwordForm, confirm_password: e.target.value })}
-                  className="w-full border border-gray-300 rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword.confirm_password ? "text" : "password"}
+                    placeholder="Confirm new password"
+                    value={passwordForm.confirm_password}
+                    onChange={(e) =>
+                      setPasswordForm({
+                        ...passwordForm,
+                        confirm_password: e.target.value,
+                      })
+                    }
+                    className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 pr-10"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute cursor-pointer inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                    onClick={() => togglePasswordVisibility("confirm_password")}
+                  >
+                    {showPassword.confirm_password ? (
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9.11958 9.82668L13.1464 13.8536C13.3417 14.0488 13.6583 14.0488 13.8536 13.8536C14.0488 13.6583 14.0488 13.3417 13.8536 13.1464L0.853553 0.146447C0.658291 -0.0488155 0.341709 -0.0488155 0.146447 0.146446C-0.0488156 0.341709 -0.0488155 0.658291 0.146447 0.853553L3.37624 4.08334C2.90117 4.4183 2.5126 4.80026 2.19877 5.18295C1.75443 5.72477 1.46154 6.26493 1.27931 6.66977C1.18795 6.87274 1.12369 7.04329 1.08166 7.1653C1.06063 7.22636 1.03453 7.31047 1.03453 7.31047L1.01687 7.37186C1.01687 7.37186 0.940979 7.86907 1.37202 7.9833C1.63879 8.05404 1.91251 7.8948 1.98346 7.62815L1.98444 7.62471L1.99179 7.5997C1.9989 7.57616 2.01051 7.53927 2.02715 7.49095C2.06047 7.39421 2.11375 7.25227 2.19119 7.08023C2.34655 6.73507 2.59627 6.27523 2.97201 5.81706C3.26363 5.46146 3.63213 5.10494 4.09595 4.80306L5.67356 6.38067C4.9688 6.82277 4.50024 7.60667 4.50024 8.5C4.50024 9.88071 5.61953 11 7.00024 11C7.89358 11 8.67747 10.5314 9.11958 9.82668ZM8.3807 9.0878C8.15205 9.62408 7.62005 10 7.00024 10C6.17182 10 5.50024 9.32843 5.50024 8.5C5.50024 7.88019 5.87616 7.34819 6.41244 7.11955L8.3807 9.0878ZM5.31962 3.19853L6.174 4.05291C6.43366 4.01852 6.70875 4 7.00017 4C9.0445 4 10.2857 4.9115 11.0283 5.81706C11.4041 6.27523 11.6538 6.73507 11.8091 7.08023C11.8866 7.25227 11.9399 7.39421 11.9732 7.49095C11.9898 7.53927 12.0014 7.57616 12.0085 7.5997L12.0159 7.62471L12.0169 7.62815L12.0172 7.62937C12.0885 7.89555 12.3618 8.05397 12.6283 7.9833C12.8952 7.91253 13.0542 7.63878 12.9835 7.37186L12.9832 7.37069L12.9827 7.36916L12.9816 7.365L12.9781 7.35236C12.9752 7.34204 12.9711 7.328 12.9658 7.31047C12.9552 7.27541 12.9397 7.22636 12.9187 7.1653C12.8766 7.04329 12.8124 6.87274 12.721 6.66977C12.5388 6.26493 12.2459 5.72477 11.8016 5.18295C10.904 4.0885 9.39524 3 7.00017 3C6.38264 3 5.82403 3.07236 5.31962 3.19853Z"
+                          fill="#5272FF"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
-              
+
               <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium"
+                  className="px-6 py-3 cursor-pointer border text-sm border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 font-medium"
                   onClick={() => {
                     setChangePasswordModal(false);
                     setPasswordForm({
@@ -356,9 +639,9 @@ export default function AccountPage() {
                 >
                   Cancel
                 </button>
-                <button 
-                  type="submit" 
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                <button
+                  type="submit"
+                  className="px-6 py-3 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={changingPassword}
                 >
                   {changingPassword ? "Changing..." : "Change Password"}
@@ -372,15 +655,19 @@ export default function AccountPage() {
       {/* Global Styles for Animations */}
       <style jsx global>{`
         @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
         @keyframes slideUp {
-          from { 
+          from {
             opacity: 0;
             transform: translateY(20px) scale(0.95);
           }
-          to { 
+          to {
             opacity: 1;
             transform: translateY(0) scale(1);
           }

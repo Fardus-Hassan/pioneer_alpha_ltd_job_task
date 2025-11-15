@@ -69,7 +69,7 @@ export default function Sidebar() {
       {/* Mobile Toggle Button */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed top-4 left-4 z-50 p-2 bg-[#0a1a2e] rounded-lg text-white md:hidden"
+        className="fixed top-2 left-0 z-50 p-3 bg-[#0a1a2e] rounded-r-lg text-white lg:hidden"
       >
         <Menu className="w-6 h-6" />
       </button>
@@ -77,16 +77,16 @@ export default function Sidebar() {
       {/* Mobile Overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-full w-[340px] bg-[#0a1a2e] z-50 transition-transform duration-300 md:translate-x-0 ${
+        className={`fixed left-0 top-0 h-full w-[340px] bg-[#0a1a2e] z-50 transition-transform duration-300 lg:translate-x-0 ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:relative md:z-auto`}
+        } lg:relative md:z-auto`}
       >
         {/* Close Button (Mobile) */}
         <div className="flex justify-end p-4 md:hidden">

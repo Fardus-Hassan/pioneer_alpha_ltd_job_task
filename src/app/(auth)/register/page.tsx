@@ -88,9 +88,9 @@ export default function RegisterPage() {
         password: formData.password,
       }).unwrap();
 
-      await showSuccess({ text: "Signup successful!" });
+            router.push("/login");
 
-      router.push("/login");
+      await showSuccess({ text: "Signup successful!" });
     } catch (error: any) {
       console.log("Error:", error);
       await Swal.fire({

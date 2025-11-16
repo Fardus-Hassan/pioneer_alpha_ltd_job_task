@@ -1,3 +1,4 @@
+import { icons } from "lucide-react";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Inter } from "next/font/google";
@@ -8,8 +9,11 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "My App",
-  description: "Next.js + Redux + Tailwind setup",
+  title: "Fardus_Pioneer_task",
+  description: "Next.js + Redux + Tailwind + TypeScript",
+  icons: {
+    icon: [{ url: "/Vector.png" }],
+  },
 };
 
 export default function RootLayout({

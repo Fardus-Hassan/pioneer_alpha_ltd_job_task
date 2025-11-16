@@ -10,6 +10,7 @@ import {
   useUpdateTodoMutation,
 } from "@/redux/api/todo/todoApi";
 import Swal from "sweetalert2";
+import { showSuccess } from "@/utils/alerts";
 
 type TodoForm = {
   title: string;
@@ -78,20 +79,10 @@ export default function TodoPage() {
           body: form,
         }).unwrap();
         setEditingTodo(null);
-        await Swal.fire({
-          title: "Success!",
-          text: "Todo updated successfully!",
-          icon: "success",
-          confirmButtonColor: "#3b82f6",
-        });
+        await showSuccess({ text: "Todo updated successfully!" });
       } else {
         await addTodo(form).unwrap();
-        await Swal.fire({
-          title: "Success!",
-          text: "Todo added successfully!",
-          icon: "success",
-          confirmButtonColor: "#3b82f6",
-        });
+        await showSuccess({ text: "Todo added successfully!" });
       }
 
       setForm({
@@ -153,12 +144,7 @@ export default function TodoPage() {
     if (result.isConfirmed) {
       try {
         await deleteTodo(id).unwrap();
-        await Swal.fire({
-          title: "Deleted!",
-          text: "Your todo has been deleted.",
-          icon: "success",
-          confirmButtonColor: "#3b82f6",
-        });
+        await showSuccess({ text: "Your todo has been deleted." });
         refetch();
       } catch (err) {
         await Swal.fire({

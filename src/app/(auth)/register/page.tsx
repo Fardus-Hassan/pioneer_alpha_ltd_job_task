@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Swal from "sweetalert2";
+import { showSuccess } from "@/utils/alerts";
 
 export default function RegisterPage() {
   const [signup, { isLoading, error }] = useSignupMutation();
@@ -92,12 +93,7 @@ export default function RegisterPage() {
         password: formData.password,
       }).unwrap();
 
-      await Swal.fire({
-        title: "Success!",
-        text: "Signup successful!",
-        icon: "success",
-        confirmButtonColor: "#3b82f6",
-      });
+      await showSuccess({ text: "Signup successful!" });
 
       // Redirect to login page after successful signup
       router.push("/login");

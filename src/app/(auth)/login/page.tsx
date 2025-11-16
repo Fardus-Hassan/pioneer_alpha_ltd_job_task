@@ -5,6 +5,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Swal from "sweetalert2";
+import { showSuccess } from "@/utils/alerts";
 import { isAuthenticated, getReturnRoute } from "@/utils/auth";
 
 function LoginForm() {
@@ -81,7 +82,7 @@ function LoginForm() {
         localStorage.removeItem("remembered_password");
       }
 
-      await Swal.fire({
+      await showSuccess({
         title: "Success!",
         html: `
           <div style="padding: 10px 0;">
@@ -89,14 +90,7 @@ function LoginForm() {
             <p style="font-size: 14px; color: #6B7280; margin-top: 8px;">Redirecting you now...</p>
           </div>
         `,
-        icon: "success",
-        iconColor: "#10b981",
-        confirmButtonColor: "#5272FF",
         timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-        allowOutsideClick: false,
-        allowEscapeKey: false,
       });
 
       // Get the return route (where user was before logout or intended route)

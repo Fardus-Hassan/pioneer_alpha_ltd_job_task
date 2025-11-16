@@ -21,9 +21,6 @@ export default function Sidebar() {
     ? `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User"
     : "";
 
-  // Get profile image URL or default
-  const profileImageUrl = user?.profile_image || "/profile.jpg";
-
   const handleLogout = async () => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -44,7 +41,7 @@ export default function Sidebar() {
   const SidebarContent = () => (
     <div className="flex flex-col h-screen bg-[#0D224A] text-white w-[340px]">
       {/* Profile */}
-      <div className="p-6">
+      <div className="mt-[60px]">
         <div className="flex flex-col items-center">
           {/* Profile Image with Skeleton */}
           {isLoading ? (
@@ -54,13 +51,10 @@ export default function Sidebar() {
           ) : (
             <div className="relative w-[86px] h-[86px] mb-[13px]">
               <Image
-                src={
-                  profileImageUrl.startsWith("http")
-                    ? profileImageUrl
-                    : `https://todo-app.pioneeralpha.com${profileImageUrl}`
-                }
+                src={user?.profile_image || "/profile.jpg"}
                 alt="Profile"
                 fill
+                unoptimized
                 className="rounded-full object-cover border border-white"
                 onError={(e) => {
                   e.currentTarget.src = "/profile.jpg";

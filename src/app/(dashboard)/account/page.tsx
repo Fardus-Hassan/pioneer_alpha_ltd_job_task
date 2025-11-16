@@ -7,6 +7,7 @@ import {
 import { useChangePasswordMutation } from "@/redux/api/auth/authApi";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import { showSuccess } from "@/utils/alerts";
 
 export default function AccountPage() {
   const { data: user, isLoading } = useGetUserQuery();
@@ -56,12 +57,7 @@ export default function AccountPage() {
     e.preventDefault();
     try {
       await updateUser(form).unwrap();
-      await Swal.fire({
-        title: "Success!",
-        text: "Profile updated successfully!",
-        icon: "success",
-        confirmButtonColor: "#3b82f6",
-      });
+      await showSuccess({ text: "Profile updated successfully!" });
     } catch (err: any) {
       await Swal.fire({
         title: "Error!",
@@ -104,12 +100,7 @@ export default function AccountPage() {
         new_password: passwordForm.new_password,
       }).unwrap();
 
-      await Swal.fire({
-        title: "Success!",
-        text: "Password changed successfully!",
-        icon: "success",
-        confirmButtonColor: "#3b82f6",
-      });
+      await showSuccess({ text: "Password changed successfully!" });
 
       setChangePasswordModal(false);
       setPasswordForm({

@@ -17,7 +17,6 @@ type TodoForm = {
   priority: "low" | "moderate" | "extreme";
   todo_date: string;
   is_completed?: boolean;
-  position?: number;
 };
 
 export default function TodoPage() {
@@ -51,7 +50,6 @@ export default function TodoPage() {
     priority: "moderate",
     todo_date: format(new Date(), "yyyy-MM-dd"),
     is_completed: false,
-    position: 1,
   });
 
   const { data, isLoading, refetch } = useGetTodosQuery({ search, page });
@@ -102,16 +100,27 @@ export default function TodoPage() {
         priority: "moderate",
         todo_date: format(new Date(), "yyyy-MM-dd"),
         is_completed: false,
-        position: 1,
       });
       setModalOpen(false);
-
+      
       refetch();
-    } catch (err) {
-      console.log(err);
+    } catch (err: any) {
+      console.log("Error:", err);
+      let errorMessage = "Something went wrong!";
+      
+      if (err?.data?.detail) {
+        errorMessage = err.data.detail;
+      } else if (err?.data?.message) {
+        errorMessage = err.data.message;
+      } else if (typeof err?.data === 'string') {
+        errorMessage = err.data;
+      } else if (err?.error) {
+        errorMessage = err.error;
+      }
+      
       await Swal.fire({
         title: "Error!",
-        text: "Something went wrong!",
+        text: errorMessage,
         icon: "error",
         confirmButtonColor: "#ef4444",
       });
@@ -121,12 +130,11 @@ export default function TodoPage() {
   const openEditModal = (todo: Todo) => {
     setEditingTodo(todo);
     setForm({
-      title: todo.title,
-      description: todo.description,
-      priority: todo.priority,
-      todo_date: todo.todo_date,
-      is_completed: todo.is_completed,
-      position: todo.position,
+      title: todo.title || "",
+      description: todo.description || "",
+      priority: todo.priority || "moderate",
+      todo_date: todo.todo_date || format(new Date(), "yyyy-MM-dd"),
+      is_completed: todo.is_completed || false,
     });
     setModalOpen(true);
   };
@@ -294,7 +302,7 @@ export default function TodoPage() {
                 </g>
               </svg>
             </div>
-
+            
             <div className="relative">
               <button
                 onClick={() => setShowFilterDropdown(!showFilterDropdown)}
@@ -402,8 +410,8 @@ export default function TodoPage() {
                         todo.is_completed ? "line-through text-gray-500" : ""
                       }`}
                     >
-                      {todo.title}
-                    </h3>
+                            {todo.title}
+                          </h3>
                     <div className="flex items-center gap-2">
                       <span
                         className={`px-2 py-1 rounded text-xs font-medium ${
@@ -416,7 +424,7 @@ export default function TodoPage() {
                       >
                         {todo.priority.charAt(0).toUpperCase() +
                           todo.priority.slice(1)}
-                      </span>
+                          </span>
                       <svg
                         viewBox="0 0 9 14"
                         xmlns="http://www.w3.org/2000/svg"
@@ -487,22 +495,22 @@ export default function TodoPage() {
                         />
                       </svg>
                     </div>
-                  </div>
-
+                        </div>
+                        
                   {/* Description */}
                   <p
                     className={`text-gray-600 text-sm mb-4 line-clamp-2 ${
                       todo.is_completed ? "line-through text-gray-400" : ""
                     }`}
                   >
-                    {todo.description}
-                  </p>
-
+                          {todo.description}
+                        </p>
+                        
                   {/* Footer with Due Date and Actions */}
                   <div className="flex items-center justify-between pt-3">
                     <span className="text-sm text-gray-500">
                       Due {format(new Date(todo.todo_date), "MMM dd, yyyy")}
-                    </span>
+                          </span>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => openEditModal(todo)}
@@ -587,7 +595,7 @@ export default function TodoPage() {
             >
               Previous
             </button>
-
+            
             <div className="flex gap-2">
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 const pageNum =
@@ -611,7 +619,7 @@ export default function TodoPage() {
                 ) : null;
               })}
             </div>
-
+            
             <button
               onClick={() => setPage(Math.min(totalPages, page + 1))}
               disabled={page === totalPages}
@@ -624,24 +632,37 @@ export default function TodoPage() {
 
         {/* Page Info */}
           {data && data.count > 0 && (
-            <div className="text-center mt-4 text-sm text-gray-600">
+          <div className="text-center mt-4 text-sm text-gray-600">
               Page {page} of {totalPages} • Total Items: {data.count} • Items per
               page: {itemsPerPage}
-            </div>
-          )}
+          </div>
+        )}
 
         {/* Modal */}
-{modalOpen && (
-  <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
+        {modalOpen && (
+  <div 
+    className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn"
+    onClick={() => {
+      setModalOpen(false);
+      setEditingTodo(null);
+      setForm({
+        title: "",
+        description: "",
+        priority: "moderate",
+        todo_date: format(new Date(), "yyyy-MM-dd"),
+        is_completed: false,
+      });
+    }}
+  >
     <div
       className="bg-white rounded-3xl w-full max-w-lg transform transition-all duration-300 scale-100 animate-slideUp"
-      onClick={(e) => e.stopPropagation()}
-    >
+              onClick={(e) => e.stopPropagation()}
+            >
       {/* Header */}
       <div className="p-6 flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900">
           {editingTodo ? "Edit Task" : "Add New Task"}
-        </h2>
+                </h2>
         <button
           onClick={() => {
             setModalOpen(false);
@@ -652,67 +673,67 @@ export default function TodoPage() {
               priority: "moderate",
               todo_date: format(new Date(), "yyyy-MM-dd"),
               is_completed: false,
-              position: 1,
             });
           }}
           className="text-sm font-semibold text-gray-900 hover:text-gray-700 underline"
         >
           Go Back
         </button>
-      </div>
-
+              </div>
+              
       <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-5">
         {/* Title */}
-        <div>
+                <div>
           <label className="block text-sm font-semibold text-gray-900 mb-2">
             Title
-          </label>
-          <input
-            type="text"
+                  </label>
+                  <input
+                    type="text"
             placeholder=""
-            value={form.title}
+                    value={form.title}
             onChange={(e) =>
               setForm({ ...form, title: e.target.value })
             }
             className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-            required
-          />
-        </div>
-
+                    required
+                  />
+                </div>
+                
         {/* Date */}
-        <div>
+                <div>
           <label className="block text-sm font-semibold text-gray-900 mb-2">
             Date
-          </label>
+                  </label>
           <div className="relative">
-            <input
-              type="date"
-              value={form.todo_date}
+                  <input
+                    type="date"
+                    value={form.todo_date}
               onChange={(e) =>
                 setForm({ ...form, todo_date: e.target.value })
               }
               className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-              required
-            />
+                    required
+                  />
             <svg width="15" className="absolute right-[17px] top-[50%] translate-y-[-50%] z-0 pointer-events-none" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M13.5 1.34715L9.89685 1.34717V0.450106C9.89685 0.201422 9.69548 0 9.44685 0C9.19823 0 8.99685 0.201422 8.99685 0.450106V1.34694H5.39685V0.450106C5.39685 0.201422 5.19548 0 4.94685 0C4.69823 0 4.49685 0.201422 4.49685 0.450106V1.34694H0.9C0.402975 1.34694 0 1.75001 0 2.24715V13.4998C0 13.9969 0.402975 14.4 0.9 14.4H13.5C13.997 14.4 14.4 13.9969 14.4 13.4998V2.24715C14.4 1.75022 13.997 1.34715 13.5 1.34715ZM13.5 13.4998H0.9V2.24715H4.49685V2.70063C4.49685 2.9493 4.69823 3.15074 4.94685 3.15074C5.19548 3.15074 5.39685 2.9493 5.39685 2.70063V2.24738H8.99685V2.70086C8.99685 2.94954 9.19823 3.15096 9.44685 3.15096C9.69548 3.15096 9.89685 2.94954 9.89685 2.70086V2.24738H13.5V13.4998ZM10.35 7.19852H11.25C11.4984 7.19852 11.7 6.99688 11.7 6.74842V5.84821C11.7 5.59975 11.4984 5.3981 11.25 5.3981H10.35C10.1016 5.3981 9.9 5.59975 9.9 5.84821V6.74842C9.9 6.99688 10.1016 7.19852 10.35 7.19852ZM10.35 10.7991H11.25C11.4984 10.7991 11.7 10.5977 11.7 10.349V9.44883C11.7 9.20037 11.4984 8.99872 11.25 8.99872H10.35C10.1016 8.99872 9.9 9.20037 9.9 9.44883V10.349C9.9 10.5979 10.1016 10.7991 10.35 10.7991ZM7.65 8.99872H6.75C6.5016 8.99872 6.3 9.20037 6.3 9.44883V10.349C6.3 10.5977 6.5016 10.7991 6.75 10.7991H7.65C7.8984 10.7991 8.1 10.5977 8.1 10.349V9.44883C8.1 9.20059 7.8984 8.99872 7.65 8.99872ZM7.65 5.3981H6.75C6.5016 5.3981 6.3 5.59975 6.3 5.84821V6.74842C6.3 6.99688 6.5016 7.19852 6.75 7.19852H7.65C7.8984 7.19852 8.1 6.99688 8.1 6.74842V5.84821C8.1 5.59952 7.8984 5.3981 7.65 5.3981ZM4.05 5.3981H3.15C2.9016 5.3981 2.7 5.59975 2.7 5.84821V6.74842C2.7 6.99688 2.9016 7.19852 3.15 7.19852H4.05C4.2984 7.19852 4.5 6.99688 4.5 6.74842V5.84821C4.5 5.59952 4.2984 5.3981 4.05 5.3981ZM4.05 8.99872H3.15C2.9016 8.99872 2.7 9.20037 2.7 9.44883V10.349C2.7 10.5977 2.9016 10.7991 3.15 10.7991H4.05C4.2984 10.7991 4.5 10.5977 4.5 10.349V9.44883C4.5 9.20059 4.2984 8.99872 4.05 8.99872Z" fill="#A1A3AB"/>
 </svg>
 
           </div>
-        </div>
-
+                </div>
+                
         {/* Priority */}
-        <div>
+                <div>
           <label className="block text-sm font-semibold text-gray-900 mb-3">
-            Priority
-          </label>
+                    Priority
+                  </label>
           <div className="flex items-center gap-6">
             <label className="flex flex-row-reverse items-center gap-2 cursor-pointer">
               <input
                 type="radio"
+                name="priority"
                 value="extreme"
                 checked={form.priority === "extreme"}
-                onChange={() => setForm({ ...form, priority: "extreme" })}
+                onChange={(e) => setForm({ ...form, priority: e.target.value as "low" | "moderate" | "extreme" })}
                 className="w-4 h-4 text-red-500 focus:ring-red-500"
               />
               <span className="flex items-center gap-1.5 text-sm font-medium text-gray-700">
@@ -724,9 +745,10 @@ export default function TodoPage() {
             <label className="flex flex-row-reverse items-center gap-2 cursor-pointer">
               <input
                 type="radio"
+                name="priority"
                 value="moderate"
                 checked={form.priority === "moderate"}
-                onChange={() => setForm({ ...form, priority: "moderate" })}
+                onChange={(e) => setForm({ ...form, priority: e.target.value as "low" | "moderate" | "extreme" })}
                 className="w-4 h-4 text-green-500 focus:ring-green-500"
               />
               <span className="flex items-center gap-1.5 text-sm font-medium text-gray-700">
@@ -736,20 +758,43 @@ export default function TodoPage() {
             </label>
 
             <label className="flex flex-row-reverse items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
+                        <input
+                          type="radio"
+                name="priority"
                 value="low"
                 checked={form.priority === "low"}
-                onChange={() => setForm({ ...form, priority: "low" })}
+                onChange={(e) => setForm({ ...form, priority: e.target.value as "low" | "moderate" | "extreme" })}
                 className="w-4 h-4 text-yellow-500 focus:ring-yellow-500"
               />
               <span className="flex items-center gap-1.5 text-sm font-medium text-gray-700">
                 <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
                 Low
               </span>
-            </label>
-          </div>
-        </div>
+                      </label>
+                  </div>
+                </div>
+                
+        {/* Edit-only fields: is_completed and position */}
+        {editingTodo && (
+          <>
+            {/* Is Completed */}
+            <div>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={form.is_completed || false}
+                  onChange={(e) =>
+                    setForm({ ...form, is_completed: e.target.checked })
+                  }
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-sm font-semibold text-gray-900">
+                  Mark as Completed
+                </span>
+              </label>
+            </div>
+          </>
+        )}
 
         {/* Task Description */}
         <div>
@@ -776,31 +821,31 @@ export default function TodoPage() {
           >
             Done
           </button>
-          <button
-            type="button"
-            onClick={() => {
-              setModalOpen(false);
-              setEditingTodo(null);
-              setForm({
-                title: "",
-                description: "",
-                priority: "moderate",
-                todo_date: format(new Date(), "yyyy-MM-dd"),
-                is_completed: false,
-                position: 1,
-              });
-            }}
+                  <button
+                    type="button"
+                    onClick={() => { 
+                      setModalOpen(false); 
+                      setEditingTodo(null);
+                      setForm({
+                        title: "",
+                        description: "",
+                        priority: "moderate",
+                        todo_date: format(new Date(), "yyyy-MM-dd"),
+                        is_completed: false,
+                        
+                      });
+                    }}
             className="w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center transition-all duration-200"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Global Styles for Animations */}
@@ -814,11 +859,11 @@ export default function TodoPage() {
           }
         }
         @keyframes slideUp {
-          from {
+          from { 
             opacity: 0;
             transform: translateY(20px) scale(0.95);
           }
-          to {
+          to { 
             opacity: 1;
             transform: translateY(0) scale(1);
           }

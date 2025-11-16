@@ -329,7 +329,7 @@ export default function AccountPage() {
                   Email
                 </label>
                 <input
-                  className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 text-sm bg-gray-50 text-gray-600 cursor-not-allowed"
+                  className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 text-sm text-gray-600 cursor-not-allowed"
                   value={user?.email || ""}
                   disabled
                   readOnly

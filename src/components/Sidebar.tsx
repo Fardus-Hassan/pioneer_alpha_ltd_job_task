@@ -33,7 +33,7 @@ export default function Sidebar() {
     });
 
     if (result.isConfirmed) {
-      logout();
+      logout(pathname);
     }
   };
 

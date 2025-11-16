@@ -11,7 +11,7 @@ export default function TopBar() {
   }); // 07/11/2025
 
   return (
-    <header className="h-16 bg-white flex items-center justify-between px-4 sticky top-0 z-40">
+    <header className="h-16 bg-white flex items-center justify-between lg:px-20 px-4 sticky top-0 z-40 lg:py-[28px]">
       {/* Left: Logo + Text */}
       <div className="flex items-center gap-3">
 <svg width="105" height="32" viewBox="0 0 105 32" fill="none" xmlns="http://www.w3.org/2000/svg">

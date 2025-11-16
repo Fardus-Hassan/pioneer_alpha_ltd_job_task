@@ -23,6 +23,10 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
         setIsAuthorized(true);
         setIsLoading(false);
       } else {
+        // Store current route before redirecting to login
+        if (pathname && pathname !== '/login') {
+          localStorage.setItem('return_route', pathname);
+        }
         // Redirect to login if not authenticated
         router.push('/login');
       }
@@ -34,6 +38,10 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     const interval = setInterval(() => {
       checkTokenAndLogout();
       if (!isAuthenticated()) {
+        // Store current route before redirecting to login
+        if (pathname && pathname !== '/login') {
+          localStorage.setItem('return_route', pathname);
+        }
         router.push('/login');
       }
     }, 30000);

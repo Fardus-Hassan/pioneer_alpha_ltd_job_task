@@ -1,23 +1,14 @@
-/**
- * Auth utility functions for token management and logout
- */
 
-/**
- * Check if JWT token is expired
- */
 export const isTokenExpired = (token: string): boolean => {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    const exp = payload.exp * 1000; // Convert to milliseconds
+    const exp = payload.exp * 1000;
     return Date.now() >= exp;
   } catch (error) {
-    return true; // If token is invalid, consider it expired
+    return true;
   }
 };
 
-/**
- * Check if access token exists and is valid
- */
 export const isAuthenticated = (): boolean => {
   if (typeof window === 'undefined') return false;
   
@@ -27,23 +18,42 @@ export const isAuthenticated = (): boolean => {
   return !isTokenExpired(accessToken);
 };
 
-/**
- * Logout function - removes only access_token and refresh_token
- */
-export const logout = (): void => {
+export const logout = (currentRoute?: string): void => {
   if (typeof window === 'undefined') return;
   
-  // Remove only access_token and refresh_token
+  const currentPath = window.location.pathname;
+  const isOnAuthPage = currentPath === '/login' || currentPath === '/register';
+  
+  if (!isOnAuthPage) {
+    if (currentRoute) {
+      localStorage.setItem('return_route', currentRoute);
+    } else {
+      const path = window.location.pathname;
+      if (path && path !== '/login') {
+        localStorage.setItem('return_route', path);
+      }
+    }
+  }
+  
   localStorage.removeItem('access_token');
   localStorage.removeItem('refresh_token');
   
-  // Redirect to login
-  window.location.href = '/login';
+  if (!isOnAuthPage) {
+    window.location.href = '/login';
+  }
 };
 
-/**
- * Auto logout if token is expired
- */
+export const getReturnRoute = (): string => {
+  if (typeof window === 'undefined') return '/';
+  
+  const route = localStorage.getItem('return_route');
+  if (route) {
+    localStorage.removeItem('return_route');
+    return route;
+  }
+  return '/';
+};
+
 export const checkTokenAndLogout = (): void => {
   if (typeof window === 'undefined') return;
   

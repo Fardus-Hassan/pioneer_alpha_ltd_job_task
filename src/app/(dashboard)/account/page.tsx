@@ -128,7 +128,7 @@ export default function AccountPage() {
   if (isLoading) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-[#EEF7FF] py-8 px-4">
+    <div className="min-h-[93vh] bg-[#EEF7FF] py-8 px-4">
       <div className="max-w-4xl mx-auto lg:bg-white lg:px-[28px] lg:py-[20px] rounded-2xl">
         {/* Header */}
         <div className="mb-6">

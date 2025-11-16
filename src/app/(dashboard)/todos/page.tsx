@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { format, addDays } from "date-fns";
 import {
   Todo,
@@ -62,6 +63,22 @@ export default function TodoPage() {
   useEffect(() => {
     setPage(1);
   }, [search]);
+
+  // Open modal if `?new=1` is present in the URL (so external links can open the new-task modal)
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    try {
+      if (searchParams?.get("new")) {
+        setModalOpen(true);
+        // remove the query param without adding a new history entry
+        router.replace('/todos');
+      }
+    } catch (e) {
+      // ignore in SSR or if navigation not available
+    }
+  }, [searchParams, router]);
 
   // First page এ results length save করা
   useEffect(() => {
@@ -175,7 +192,7 @@ export default function TodoPage() {
   if (isLoading) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+    <div className="min-h-[93vh] bg-[#EEF7FF] py-8 px-4">
       <div className="">
         <div className="text-center mb-8 flex justify-between items-center flex-nowrap">
           <svg

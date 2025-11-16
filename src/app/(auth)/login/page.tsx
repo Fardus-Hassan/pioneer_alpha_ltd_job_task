@@ -74,6 +74,12 @@ function LoginForm() {
         localStorage.removeItem("remembered_password");
       }
 
+            const returnUrl = searchParams.get("return");
+      const storedRoute = getReturnRoute();
+      const returnRoute = returnUrl || storedRoute || "/";
+
+      router.push(returnRoute);
+
       await showSuccess({
         title: "Success!",
         html: `
@@ -84,12 +90,6 @@ function LoginForm() {
         `,
         timer: 1500,
       });
-
-      const returnUrl = searchParams.get("return");
-      const storedRoute = getReturnRoute();
-      const returnRoute = returnUrl || storedRoute || "/";
-
-      router.push(returnRoute);
     } catch (err: any) {
       console.log("Login Error:", err);
 

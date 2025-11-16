@@ -16,7 +16,6 @@ export default function Sidebar() {
 
   const isActive = (href: string) => pathname === href;
 
-  // Get user full name
   const fullName = user
     ? `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User"
     : "";
@@ -40,10 +39,8 @@ export default function Sidebar() {
 
   const SidebarContent = () => (
     <div className="flex flex-col h-screen bg-[#0D224A] text-white w-[340px]">
-      {/* Profile */}
       <div className="mt-[60px]">
         <div className="flex flex-col items-center">
-          {/* Profile Image with Skeleton */}
           {isLoading ? (
             <div className="relative w-20 h-20 mb-3">
               <div className="w-20 h-20 rounded-full bg-gray-700 border-4 border-gray-700 animate-pulse"></div>
@@ -63,14 +60,12 @@ export default function Sidebar() {
             </div>
           )}
 
-          {/* Name with Skeleton */}
           {isLoading ? (
             <div className="w-32 h-6 mb-2 rounded bg-gray-700 animate-pulse"></div>
           ) : (
             <h3 className="font-semibold text-center">{fullName || "User"}</h3>
           )}
 
-          {/* Email with Skeleton */}
           {isLoading ? (
             <div className="w-40 h-4 rounded bg-gray-700 animate-pulse"></div>
           ) : (
@@ -81,9 +76,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Menu */}
       <nav className="flex-1 mt-[46px]">
-      {/* Dashboard */}
       <Link
         href="/"
         className={`flex items-center gap-3 py-4 transition-all duration-300 ease-in-out pl-[56px] ${
@@ -108,7 +101,6 @@ export default function Sidebar() {
         <span className="font-medium">Dashboard</span>
       </Link>
 
-      {/* Todos */}
       <Link
         href="/todos"
         className={`flex items-center gap-3 pl-[56px] py-4 transition-all duration-500 ease-in-out ${
@@ -137,7 +129,6 @@ export default function Sidebar() {
         <span className="font-medium">Todos</span>
       </Link>
 
-      {/* Account Information */}
       <Link
         href="/account"
         className={`flex items-center gap-3 pl-[56px] py-4 transition-all duration-500 ease-in-out ${
@@ -163,7 +154,6 @@ export default function Sidebar() {
       </Link>
     </nav>
 
-      {/* Logout */}
       <div className="mb-[30px]">
         <button
           onClick={handleLogout}
@@ -190,7 +180,6 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile Toggle Button */}
       <button
         onClick={() => setMobileOpen(true)}
         className="fixed top-2 left-0 z-50 p-3 bg-[#5272FF] rounded-r-lg text-white lg:hidden"
@@ -198,7 +187,6 @@ export default function Sidebar() {
         <Menu className="w-6 h-6" />
       </button>
 
-      {/* Mobile Overlay */}
       {mobileOpen && (
         <div
           className="fixed inset-0 bg-black/50 bg-opacity-50 z-40 lg:hidden"
@@ -206,13 +194,11 @@ export default function Sidebar() {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed left-0 top-0 max-h-screen w-[340px] z-50 transition-transform duration-300 lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         } lg:relative md:z-auto`}
       >
-        {/* Close Button (Mobile) */}
         <div className="flex justify-end md:hidden absolute right-3 top-3">
           <button
             onClick={() => setMobileOpen(false)}

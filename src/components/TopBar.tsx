@@ -9,11 +9,10 @@ export default function TopBar() {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-  }); // 07/11/2025
+  }); 
 
   return (
     <header className="h-16 bg-white flex items-center justify-between lg:px-20 px-4 sticky top-0 z-40 lg:py-[28px]">
-      {/* Left: Logo + Text */}
       <div className="flex items-center gap-3">
         <Link href="/">
         <svg
@@ -102,9 +101,7 @@ export default function TopBar() {
         </svg></Link>
       </div>
 
-      {/* Right: Icons + Date */}
       <div className="flex items-center gap-3">
-        {/* Bell */}
         <svg
           width="34"
           height="34"
@@ -133,7 +130,6 @@ export default function TopBar() {
           />
         </svg>
 
-        {/* Date - Desktop */}
         <div className="flex flex-col text-sm font-medium text-gray-700">
           <span>{dayName}</span>
           <span>{dateStr}</span>

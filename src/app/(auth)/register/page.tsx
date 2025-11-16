@@ -39,35 +39,30 @@ export default function RegisterPage() {
       confirm_password: "",
     };
 
-    // First Name validation
     if (!formData.first_name.trim()) {
       newErrors.first_name = "Please enter your first name";
     } else if (!/^[a-zA-Z\s]+$/.test(formData.first_name)) {
       newErrors.first_name = "Please enter a valid name format";
     }
 
-    // Last Name validation
     if (!formData.last_name.trim()) {
       newErrors.last_name = "Please enter your last name";
     } else if (!/^[a-zA-Z\s]+$/.test(formData.last_name)) {
       newErrors.last_name = "Please enter a valid name format";
     }
 
-    // Email validation
     if (!formData.email.trim()) {
       newErrors.email = "Please enter your email";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address";
     }
 
-    // Password validation
     if (!formData.password) {
       newErrors.password = "Please enter a password";
     } else if (formData.password.length < 4) {
       newErrors.password = "4 characters minimum";
     }
 
-    // Confirm Password validation
     if (!formData.confirm_password) {
       newErrors.confirm_password = "Please confirm your password";
     } else if (formData.password !== formData.confirm_password) {
@@ -95,7 +90,6 @@ export default function RegisterPage() {
 
       await showSuccess({ text: "Signup successful!" });
 
-      // Redirect to login page after successful signup
       router.push("/login");
     } catch (error: any) {
       console.log("Error:", error);
@@ -110,7 +104,6 @@ export default function RegisterPage() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
     if (errors[field as keyof typeof errors]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
@@ -126,7 +119,6 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - Image */}
       <div className="hidden lg:flex lg:flex-1 relative max-w-[606px]">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat max-w-[606px]"
@@ -138,11 +130,9 @@ export default function RegisterPage() {
         />
       </div>
 
-      {/* Right Side - Register Form */}
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-md">
           <div className="">
-            {/* Header */}
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-[#0D224A] mb-2">
                 Create your account
@@ -153,9 +143,7 @@ export default function RegisterPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Name Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* First Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     First Name
@@ -178,7 +166,6 @@ export default function RegisterPage() {
                   )}
                 </div>
 
-                {/* Last Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Last Name
@@ -202,7 +189,6 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              {/* Email Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email
@@ -221,7 +207,6 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              {/* Password Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Password
@@ -240,7 +225,7 @@ export default function RegisterPage() {
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                    className="absolute inset-y-0 cursor-pointer right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
                     onClick={togglePasswordVisibility}
                   >
                     {showPassword ? (
@@ -284,7 +269,6 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              {/* Confirm Password Field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Confirm Password
@@ -311,7 +295,6 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              {/* Error Message from API */}
               {error && (
                 <div className="bg-red-50 border border-red-200 rounded-xl p-3">
                   <p className="text-red-600 text-sm text-center">
@@ -320,11 +303,10 @@ export default function RegisterPage() {
                 </div>
               )}
 
-              {/* Sign Up Button */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-[#5272FF] hover:bg-blue-700 text-white py-3 px-4 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none mt-4"
+                className="w-full bg-[#5272FF] cursor-pointer hover:bg-blue-700 text-white py-3 px-4 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none mt-4"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center space-x-2">
@@ -336,7 +318,6 @@ export default function RegisterPage() {
                 )}
               </button>
 
-              {/* Login Link */}
               <div className="text-center">
                 <p className="text-[#4B5563]">
                   Already have an account?{" "}

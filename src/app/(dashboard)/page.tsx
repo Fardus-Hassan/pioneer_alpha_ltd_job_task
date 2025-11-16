@@ -33,7 +33,6 @@ export default function DashboardPage() {
           <p className="text-gray-600 mt-1">Welcome back! Here's your overview</p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
-          {/* Profile Card */}
           <div className="lg:col-span-3 bg-white rounded-xl p-6 shadow-sm">
             <div className="flex flex-col items-center text-center gap-4">
               <img
@@ -65,7 +64,6 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Main Stats */}
           <div className="lg:col-span-6 bg-white rounded-xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-[#0D224A]">Overview</h2>
@@ -106,7 +104,6 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Upcoming Tasks */}
           <div className="lg:col-span-3 bg-white rounded-xl p-6 shadow-sm">
             <h3 className="text-xl font-bold text-[#0D224A] mb-2">Upcoming Tasks</h3>
             <p className="text-sm text-gray-500 mb-4">Next few tasks</p>

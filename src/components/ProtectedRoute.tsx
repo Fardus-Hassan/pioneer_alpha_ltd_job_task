@@ -16,29 +16,24 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   useEffect(() => {
     const checkAuth = () => {
-      // Check token expiration
       checkTokenAndLogout();
       
       if (isAuthenticated()) {
         setIsAuthorized(true);
         setIsLoading(false);
       } else {
-        // Store current route before redirecting to login
         if (pathname && pathname !== '/login') {
           localStorage.setItem('return_route', pathname);
         }
-        // Redirect to login if not authenticated
         router.push('/login');
       }
     };
 
     checkAuth();
 
-    // Check token expiration periodically (every 30 seconds)
     const interval = setInterval(() => {
       checkTokenAndLogout();
       if (!isAuthenticated()) {
-        // Store current route before redirecting to login
         if (pathname && pathname !== '/login') {
           localStorage.setItem('return_route', pathname);
         }
@@ -49,7 +44,6 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return () => clearInterval(interval);
   }, [router, pathname]);
 
-  // Show loading spinner while checking authentication
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -66,7 +60,6 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
 
-  // Only render children if authorized
   if (!isAuthorized) {
     return null;
   }

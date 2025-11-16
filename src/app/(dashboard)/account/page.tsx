@@ -38,7 +38,6 @@ export default function AccountPage() {
     confirm_password: false,
   });
 
-  // Load user data when fetch completes
   useEffect(() => {
     if (user) {
       setForm({
@@ -72,7 +71,6 @@ export default function AccountPage() {
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Frontend validation for confirm password
     if (passwordForm.new_password !== passwordForm.confirm_password) {
       await Swal.fire({
         title: "Error!",
@@ -94,7 +92,6 @@ export default function AccountPage() {
     }
 
     try {
-      // Only send old_password and new_password to backend
       await changePassword({
         old_password: passwordForm.old_password,
         new_password: passwordForm.new_password,
@@ -130,7 +127,6 @@ export default function AccountPage() {
   return (
     <div className="min-h-[93vh] bg-[#EEF7FF] py-8 px-4">
       <div className="max-w-4xl mx-auto lg:bg-white lg:px-[28px] lg:py-[20px] rounded-2xl">
-        {/* Header */}
         <div className="mb-6">
           <svg
             viewBox="0 0 242 32.2222"
@@ -167,7 +163,6 @@ export default function AccountPage() {
 
         <div className="">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Profile Image Section with Change Password Button */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-4 border px-[24px] py-[14px] rounded-2xl border-[#A1A3ABA1]">
                 <div className="relative">
@@ -282,7 +277,6 @@ export default function AccountPage() {
               </button>
             </div>
 
-            {/* Name Row */}
             <div className="space-y-6 border md:px-[48px] px-[24px] py-[20px] rounded-2xl border-[#A1A3ABA1]">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
                 <div>
@@ -314,7 +308,6 @@ export default function AccountPage() {
                 </div>
               </div>
 
-              {/* Email - Read Only */}
               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-2">
                   Email
@@ -327,7 +320,6 @@ export default function AccountPage() {
                 />
               </div>
 
-              {/* Address and Contact Number Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-900 mb-2">
@@ -358,7 +350,6 @@ export default function AccountPage() {
                 </div>
               </div>
 
-              {/* Birthday */}
               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-2">
                   Birthday
@@ -397,7 +388,6 @@ export default function AccountPage() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
                 <button
                   type="submit"
@@ -418,7 +408,6 @@ export default function AccountPage() {
         </div>
       </div>
 
-      {/* Change Password Modal */}
       {changePasswordModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn">
           <div
@@ -643,7 +632,6 @@ export default function AccountPage() {
         </div>
       )}
 
-      {/* Global Styles for Animations */}
       <style jsx global>{`
         @keyframes fadeIn {
           from {

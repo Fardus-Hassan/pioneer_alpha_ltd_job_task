@@ -59,12 +59,10 @@ export default function TodoPage() {
   const [updateTodo] = useUpdateTodoMutation();
   const [deleteTodo] = useDeleteTodoMutation();
 
-  // Search করলে page reset করা
   useEffect(() => {
     setPage(1);
   }, [search]);
 
-  // Open modal if `?new=1` is present in the URL (so external links can open the new-task modal)
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -72,15 +70,12 @@ export default function TodoPage() {
     try {
       if (searchParams?.get("new")) {
         setModalOpen(true);
-        // remove the query param without adding a new history entry
         router.replace('/todos');
       }
     } catch (e) {
-      // ignore in SSR or if navigation not available
-    }
+      console.error("Error handling search params:", e);}
   }, [searchParams, router]);
 
-  // First page এ results length save করা
   useEffect(() => {
     if (data && data.previous === null && data.results.length > 0) {
       setItemsPerPage(data.results.length);
@@ -174,7 +169,6 @@ export default function TodoPage() {
     }
   };
 
-  // Pagination calculation
   const totalPages = data ? Math.ceil(data.count / itemsPerPage) : 1;
 
   const filteredTodos = data?.results.filter((todo) => {
@@ -266,7 +260,6 @@ export default function TodoPage() {
           </button>
         </div>
 
-        {/* Search and Filter Section */}
         <div className="">
           <div className="flex flex-col lg:flex-row gap-2 items-center justify-between">
             <div className="relative flex-1 w-full">
@@ -394,7 +387,6 @@ export default function TodoPage() {
           </div>
         </div>
 
-        {/* Todos List */}
         <div className="sm:mt-11 mt-6">
 
           {filteredTodos && filteredTodos.length > 0 ? <h2 className="text-lg font-bold text-black mb-4">Your Tasks</h2> : "" }
@@ -406,7 +398,6 @@ export default function TodoPage() {
                   key={todo.id}
                   className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow duration-200"
                 >
-                  {/* Header with Title and Priority */}
                   <div className="flex items-start justify-between mb-3">
                     <h3
                       className={`font-semibold text-gray-900 flex-1 pr-2 ${
@@ -500,7 +491,6 @@ export default function TodoPage() {
                     </div>
                         </div>
                         
-                  {/* Description */}
                   <p
                     className={`text-gray-600 text-sm mb-4 line-clamp-2 ${
                       todo.is_completed ? "line-through text-gray-400" : ""
@@ -509,7 +499,6 @@ export default function TodoPage() {
                           {todo.description}
                         </p>
                         
-                  {/* Footer with Due Date and Actions */}
                   <div className="flex items-center justify-between pt-3">
                     <span className="text-sm text-gray-500">
                       Due {format(new Date(todo.todo_date), "MMM dd, yyyy")}
@@ -588,7 +577,6 @@ export default function TodoPage() {
           )}
         </div>
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex justify-center items-center gap-4 mt-8">
             <button
@@ -633,7 +621,6 @@ export default function TodoPage() {
           </div>
         )}
 
-        {/* Page Info */}
           {data && data.count > 0 && (
           <div className="text-center mt-4 text-sm text-gray-600">
               Page {page} of {totalPages} • Total Items: {data.count} • Items per
@@ -641,7 +628,6 @@ export default function TodoPage() {
           </div>
         )}
 
-        {/* Modal */}
         {modalOpen && (
   <div 
     className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fadeIn"
@@ -661,7 +647,6 @@ export default function TodoPage() {
       className="bg-white rounded-3xl w-full max-w-lg transform transition-all duration-300 scale-100 animate-slideUp"
               onClick={(e) => e.stopPropagation()}
             >
-      {/* Header */}
       <div className="p-6 flex items-center justify-between">
         <h2 className="text-xl font-bold text-gray-900">
           {editingTodo ? "Edit Task" : "Add New Task"}
@@ -685,7 +670,6 @@ export default function TodoPage() {
               </div>
               
       <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-5">
-        {/* Title */}
                 <div>
           <label className="block text-sm font-semibold text-gray-900 mb-2">
             Title
@@ -702,7 +686,6 @@ export default function TodoPage() {
                   />
                 </div>
                 
-        {/* Date */}
                 <div>
           <label className="block text-sm font-semibold text-gray-900 mb-2">
             Date
@@ -724,7 +707,6 @@ export default function TodoPage() {
           </div>
                 </div>
                 
-        {/* Priority */}
                 <div>
           <label className="block text-sm font-semibold text-gray-900 mb-3">
                     Priority
@@ -777,10 +759,8 @@ export default function TodoPage() {
                   </div>
                 </div>
                 
-        {/* Edit-only fields: is_completed and position */}
         {editingTodo && (
           <>
-            {/* Is Completed */}
             <div>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -799,7 +779,6 @@ export default function TodoPage() {
           </>
         )}
 
-        {/* Task Description */}
         <div>
           <label className="block text-sm font-semibold text-gray-900 mb-2">
             Task Description
@@ -816,7 +795,6 @@ export default function TodoPage() {
           />
         </div>
 
-        {/* Buttons */}
         <div className="flex justify-between items-center pt-2">
           <button
             type="submit"
@@ -851,7 +829,6 @@ export default function TodoPage() {
         )}
       </div>
 
-      {/* Global Styles for Animations */}
       <style jsx global>{`
         @keyframes fadeIn {
           from {

@@ -107,7 +107,7 @@ export default function DashboardPage() {
             <h3 className="text-lg font-semibold text-[#0D224A]">Upcoming</h3>
             <p className="text-sm text-gray-500 mt-1">Next few tasks</p>
 
-            <div className="mt-4 space-y-3">
+            <div className="mt-4 space-y-3 max-h-[165px] overflow-y-auto">
               {upcoming.length === 0 ? (
                 <p className="text-sm text-gray-500">No upcoming tasks</p>
               ) : (

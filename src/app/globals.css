@@ -4,18 +4,15 @@
   font-family: var(--font-inter);
 }
 
-/* Chrome, Edge, Opera */
 input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0;
   cursor: pointer;
 }
 
-/* Firefox */
 input[type="date"]::-moz-calendar-picker-indicator {
   opacity: 0;
 }
 
-/* For all browsers */
 input[type="date"] {
   position: relative;
   background: transparent;

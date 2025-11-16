@@ -90,7 +90,7 @@ function LoginForm() {
             <p style="font-size: 14px; color: #6B7280; margin-top: 8px;">Redirecting you now...</p>
           </div>
         `,
-        timer: 2000,
+        timer: 1500,
       });
 
       // Get the return route (where user was before logout or intended route)

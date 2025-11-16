@@ -11,7 +11,7 @@ export const showSuccess = async ({
   title = "Success!",
   text,
   html,
-  timer = 1000,
+  timer = 1500,
 }: SuccessOptions) => {
   const content = html ?? `
     <div style="padding: 10px 0;">

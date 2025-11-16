@@ -167,7 +167,7 @@ export default function Sidebar() {
       <div className="mb-[30px]">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 pl-[56px] py-4 text-[#8CA3CD] hover:[background:linear-gradient(to_right,#1E3677_0%,#1E3677_0%,#1E3677_0%,#0D224A_80%)] hover:text-white rounded-lg transition-colors"
+          className="w-full flex items-center gap-3 pl-[56px] py-4 transition-all duration-300 ease-in-out text-[#8CA3CD] hover:[background:linear-gradient(to_right,#1E3677_0%,#1E3677_0%,#1E3677_0%,#0D224A_80%)] hover:text-white rounded-lg"
         >
           <svg
             viewBox="0 0 21.6666 24"

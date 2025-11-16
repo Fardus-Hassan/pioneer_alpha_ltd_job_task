@@ -332,7 +332,7 @@ export default function TodoPage() {
                         type="checkbox"
                         checked={filter === "today"}
                         onChange={() =>
-                          setFilter(filter === "today" ? "" : "today")
+                          setFilter(filter === "today" ? "all" : "today")
                         }
                         className="w-[14px] h-[14px] rounded-sm border-2 border-gray-300 cursor-pointer"
                       />
@@ -345,7 +345,7 @@ export default function TodoPage() {
                       <input
                         type="checkbox"
                         checked={filter === "5"}
-                        onChange={() => setFilter(filter === "5" ? "" : "5")}
+                        onChange={() => setFilter(filter === "5" ? "all" : "5")}
                         className="w-[14px] h-[14px] rounded-sm border-2 border-gray-300 cursor-pointer"
                       />
                       <span className="ml-2 text-xs text-gray-700 group-hover:text-gray-900">
@@ -357,7 +357,7 @@ export default function TodoPage() {
                       <input
                         type="checkbox"
                         checked={filter === "10"}
-                        onChange={() => setFilter(filter === "10" ? "" : "10")}
+                        onChange={() => setFilter(filter === "10" ? "all" : "10")}
                         className="w-[14px] h-[14px] rounded-sm border-2 border-gray-300 cursor-pointer"
                       />
                       <span className="ml-2 text-xs text-gray-700 group-hover:text-gray-900">
@@ -369,7 +369,7 @@ export default function TodoPage() {
                       <input
                         type="checkbox"
                         checked={filter === "30"}
-                        onChange={() => setFilter(filter === "30" ? "" : "30")}
+                        onChange={() => setFilter(filter === "30" ? "all" : "30")}
                         className="w-[14px] h-[14px] rounded-sm border-2 border-gray-300 cursor-pointer"
                       />
                       <span className="ml-2 text-xs text-gray-700 group-hover:text-gray-900">

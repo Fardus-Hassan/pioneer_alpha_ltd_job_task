@@ -91,6 +91,7 @@ export default function Sidebar() {
             ? "[background:linear-gradient(to_right,#1E3677_0%,#1E3677_0%,#1E3677_0%,#0D224A_80%)] text-white"
             : "text-[#8CA3CD] hover:[background:linear-gradient(to_right,#1E3677_0%,#1E3677_0%,#1E3677_0%,#0D224A_80%)] hover:text-white"
         }`}
+        onClick={() => setMobileOpen(false)}
       >
         <svg
           width="24"
@@ -115,6 +116,7 @@ export default function Sidebar() {
             ? "[background:linear-gradient(to_right,#1E3677_0%,#1E3677_0%,#1E3677_0%,#0D224A_80%)] text-white"
             : "text-[#8CA3CD] hover:[background:linear-gradient(to_right,#1E3677_0%,#1E3677_0%,#1E3677_0%,#0D224A_80%)] hover:text-white"
         }`}
+        onClick={() => setMobileOpen(false)}
       >
         <svg
           width="24"
@@ -143,6 +145,7 @@ export default function Sidebar() {
             ? "[background:linear-gradient(to_right,#1E3677_0%,#1E3677_0%,#1E3677_0%,#0D224A_80%)] text-white"
             : "text-[#8CA3CD] hover:[background:linear-gradient(to_right,#1E3677_0%,#1E3677_0%,#1E3677_0%,#0D224A_80%)] hover:text-white"
         }`}
+        onClick={() => setMobileOpen(false)}
       >
         <svg
           width="24"

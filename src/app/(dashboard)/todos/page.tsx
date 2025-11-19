@@ -462,15 +462,10 @@ export default function TodoPage() {
               {filteredTodos.map((todo) => (
                 <div
                   key={todo.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, todo)}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, todo)}
-                  onDragEnd={handleDragEnd}
-                  className={`bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-all duration-200 cursor-move ${
-                    draggedTodo?.id === todo.id
-                      ? "opacity-50 bg-gray-100"
-                      : ""
+                  className={`bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-all duration-200 ${
+                    draggedTodo?.id === todo.id ? "opacity-50 bg-gray-100" : ""
                   }`}
                 >
                   <div className="flex items-start justify-between mb-3">
@@ -494,75 +489,83 @@ export default function TodoPage() {
                         {todo.priority.charAt(0).toUpperCase() +
                           todo.priority.slice(1)}
                       </span>
-                      <svg
-                        viewBox="0 0 9 14"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="9.000000"
-                        height="14.000000"
-                        fill="none"
+                      <div
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, todo)}
+                        onDragEnd={handleDragEnd}
+                        className="cursor-move p-1 rounded-md"
+                        title="Drag to reorder"
                       >
-                        <rect
-                          id="Frame 1000005074"
+                        <svg
+                          viewBox="0 0 9 14"
+                          xmlns="http://www.w3.org/2000/svg"
                           width="9.000000"
                           height="14.000000"
-                          x="0.000000"
-                          y="0.000000"
-                        />
-                        <rect
-                          id="Rectangle 361"
-                          width="4.000000"
-                          height="4.000000"
-                          x="0.000000"
-                          y="0.000000"
-                          rx="1.000000"
-                          fill="rgb(140,163,205)"
-                        />
-                        <rect
-                          id="Rectangle 363"
-                          width="4.000000"
-                          height="4.000000"
-                          x="0.000000"
-                          y="5.000000"
-                          rx="1.000000"
-                          fill="rgb(140,163,205)"
-                        />
-                        <rect
-                          id="Rectangle 365"
-                          width="4.000000"
-                          height="4.000000"
-                          x="0.000000"
-                          y="10.000000"
-                          rx="1.000000"
-                          fill="rgb(140,163,205)"
-                        />
-                        <rect
-                          id="Rectangle 362"
-                          width="4.000000"
-                          height="4.000000"
-                          x="5.000000"
-                          y="0.000000"
-                          rx="1.000000"
-                          fill="rgb(140,163,205)"
-                        />
-                        <rect
-                          id="Rectangle 364"
-                          width="4.000000"
-                          height="4.000000"
-                          x="5.000000"
-                          y="5.000000"
-                          rx="1.000000"
-                          fill="rgb(140,163,205)"
-                        />
-                        <rect
-                          id="Rectangle 366"
-                          width="4.000000"
-                          height="4.000000"
-                          x="5.000000"
-                          y="10.000000"
-                          rx="1.000000"
-                          fill="rgb(140,163,205)"
-                        />
-                      </svg>
+                          fill="none"
+                        >
+                          <rect
+                            id="Frame 1000005074"
+                            width="9.000000"
+                            height="14.000000"
+                            x="0.000000"
+                            y="0.000000"
+                          />
+                          <rect
+                            id="Rectangle 361"
+                            width="4.000000"
+                            height="4.000000"
+                            x="0.000000"
+                            y="0.000000"
+                            rx="1.000000"
+                            fill="rgb(140,163,205)"
+                          />
+                          <rect
+                            id="Rectangle 363"
+                            width="4.000000"
+                            height="4.000000"
+                            x="0.000000"
+                            y="5.000000"
+                            rx="1.000000"
+                            fill="rgb(140,163,205)"
+                          />
+                          <rect
+                            id="Rectangle 365"
+                            width="4.000000"
+                            height="4.000000"
+                            x="0.000000"
+                            y="10.000000"
+                            rx="1.000000"
+                            fill="rgb(140,163,205)"
+                          />
+                          <rect
+                            id="Rectangle 362"
+                            width="4.000000"
+                            height="4.000000"
+                            x="5.000000"
+                            y="0.000000"
+                            rx="1.000000"
+                            fill="rgb(140,163,205)"
+                          />
+                          <rect
+                            id="Rectangle 364"
+                            width="4.000000"
+                            height="4.000000"
+                            x="5.000000"
+                            y="5.000000"
+                            rx="1.000000"
+                            fill="rgb(140,163,205)"
+                          />
+                          <rect
+                            id="Rectangle 366"
+                            width="4.000000"
+                            height="4.000000"
+                            x="5.000000"
+                            y="10.000000"
+                            rx="1.000000"
+                            fill="rgb(140,163,205)"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
 

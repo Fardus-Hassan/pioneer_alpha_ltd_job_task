@@ -147,6 +147,37 @@ export default function TodoPage() {
   const handleDragStart = (e: React.DragEvent, todo: Todo) => {
     setDraggedTodo(todo);
     e.dataTransfer.effectAllowed = "move";
+
+    try {
+      const handleEl = e.currentTarget as HTMLElement;
+      const cardEl = handleEl.closest("div[data-todo-id]") as HTMLElement | null;
+      const sourceEl = cardEl || (handleEl.parentElement as HTMLElement | null);
+      if (sourceEl) {
+        const clone = sourceEl.cloneNode(true) as HTMLElement;
+        clone.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
+        clone.style.borderRadius = getComputedStyle(sourceEl).borderRadius || "12px";
+        clone.style.background = getComputedStyle(sourceEl).backgroundColor || "#fff";
+        clone.style.width = `${sourceEl.offsetWidth}px`;
+        clone.style.height = `${sourceEl.offsetHeight}px`;
+        clone.style.position = "absolute";
+        clone.style.top = "-9999px";
+        clone.style.left = "-9999px";
+        document.body.appendChild(clone);
+
+        const rect = sourceEl.getBoundingClientRect();
+        const offsetX = Math.round(rect.width / 2);
+        const offsetY = Math.round(rect.height / 2);
+        // Use the cloned element as the drag image
+        e.dataTransfer.setDragImage(clone, offsetX, offsetY);
+
+        // remove clone on next tick (some browsers need it to remain briefly)
+        setTimeout(() => {
+          if (clone && clone.parentNode) clone.parentNode.removeChild(clone);
+        }, 0);
+      }
+    } catch (err) {
+      console.warn("drag image error", err);
+    }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -162,7 +193,6 @@ export default function TodoPage() {
     }
 
     try {
-      // Swap positions between dragged and target todos
       await updateTodo({
         id: draggedTodo.id,
         body: { position: targetTodo.position },
@@ -462,6 +492,7 @@ export default function TodoPage() {
               {filteredTodos.map((todo) => (
                 <div
                   key={todo.id}
+                  data-todo-id={todo.id}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, todo)}
                   className={`bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-all duration-200 ${

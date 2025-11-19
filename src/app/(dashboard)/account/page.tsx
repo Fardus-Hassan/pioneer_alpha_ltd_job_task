@@ -122,7 +122,17 @@ export default function AccountPage() {
     }));
   };
 
-  if (isLoading) return <p className="text-center py-10">Loading...</p>;
+  if (isLoading) return <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-8 h-8 bg-blue-600 rounded-full opacity-20"></div>
+            </div>
+          </div>
+          <p className="text-gray-600 font-medium">Loading...</p>
+        </div>
+      </div>;
 
   return (
     <div className="min-h-[93vh] bg-[#EEF7FF] py-8 px-4">
@@ -386,6 +396,21 @@ export default function AccountPage() {
                     />
                   </svg>
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  Bio
+                </label>
+                <textarea
+                  className="w-full border border-gray-300 rounded-lg py-2.5 px-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                  value={form.bio}
+                  onChange={(e) =>
+                    setForm({ ...form, bio: e.target.value })
+                  }
+                  placeholder="Tell us about yourself..."
+                  rows={4}
+                />
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
